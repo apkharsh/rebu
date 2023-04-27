@@ -1,11 +1,11 @@
 const Booking = require("../models/Booking");
-const Room = require("../models/Room");
+const Car = require("../models/Car");
 const nodemailer = require("nodemailer");
 // use dotenv
 const dotenv = require("dotenv");
 dotenv.config();
 
-const get_available_rooms = async (
+const get_available_cars = async (
     start_time,
     end_time,
     type_preference = null
@@ -14,61 +14,61 @@ const get_available_rooms = async (
         $or: [
             {
                 $and: [
-                    { checkInTime: { $lte: start_time } },
-                    { checkOutTime: { $gte: start_time } },
+                    { bookedFrom: { $lte: start_time } },
+                    { bookedTo: { $gte: start_time } },
                 ],
             },
             {
                 $and: [
-                    { checkInTime: { $lte: end_time } },
-                    { checkOutTime: { $gte: end_time } },
+                    { bookedFrom: { $lte: end_time } },
+                    { bookedTo: { $gte: end_time } },
                 ],
             },
         ],
     });
 
-    const booked_rooms = bookings.map((booking) => booking.roomID);
+    const booked_cars = bookings.map((booking) => booking.carID);
 
     if (type_preference != null) {
-        const available_rooms = await Room.find({
+        const available_cars = await Car.find({
             $and: [
-                { _id: { $nin: booked_rooms } },
-                { roomType: type_preference },
+                { _id: { $nin: booked_cars } },
+                { carType: type_preference },
             ],
         });
 
         // Return IDs of available rooms if any are found
-        return available_rooms.map((room) => room._id);
+        return available_cars.map((car) => car._id);
 
     } else {
-        const available_rooms = await Room.find({
-            _id: { $nin: booked_rooms },
+        const available_cars = await Car.find({
+            _id: { $nin: booked_cars },
         });
 
         // Return IDs of available rooms
-        return available_rooms.map((room) => room._id);
+        return available_cars.map((car) => car._id);
     }
 };
 
 
-const checkRoomAvailability = async (roomID, startTime, endTime, bookingIdToIgnore=null) => {
+const checkCarAvailability = async (carID, startTime, endTime, bookingIdToIgnore=null) => {
 
     const bookings = await Booking.find({
         $and: [
-            { roomID: roomID },
+            { carID: carID },
             { _id: { $ne: bookingIdToIgnore } },
             {
                 $or: [
                     {
                         $and: [
-                            { checkInTime: { $lte: startTime } },
-                            { checkOutTime: { $gte: startTime } },
+                            { bookingFrom: { $lte: startTime } },
+                            { bookingTo: { $gte: startTime } },
                         ],
                     },
                     {
                         $and: [
-                            { checkInTime: { $lte: endTime } },
-                            { checkOutTime: { $gte: endTime } },
+                            { bookingFrom: { $lte: endTime } },
+                            { bookingTo: { $gte: endTime } },
                         ],
                     },
                 ],
@@ -101,9 +101,9 @@ const unix_time_to_date = (unix_time) => {
 const send_email = async (booking) => {
     const email = booking.email;
     const userName = booking.userName;
-    const checkInTime = unix_time_to_date(booking.checkInTime);
-    const checkOutTime = unix_time_to_date(booking.checkOutTime);
-    const roomNumber = booking.roomID.roomNumber;
+    const bookingFrom = unix_time_to_date(booking.bookingFrom);
+    const bookingTo = unix_time_to_date(booking.bookingTo);
+    const carNumber = booking.carID.carNumber;
 
     console.log("Sending email to: ", email);
 
@@ -122,7 +122,7 @@ const send_email = async (booking) => {
         to: email,
         secure: false,
         subject: "Booking Confirmed",
-        text: `Hello ${userName},\n\nYour booking has been confirmed.\n\nRoom Number: ${roomNumber}\nCheck In Time: ${checkInTime}\nCheck Out Time: ${checkOutTime}\n\nThank you for choosing us.`,
+        text: `Hello ${userName},\n\nYour booking has been confirmed.\n\nRoom Number: ${carNumber}\nCheck In Time: ${bookingFrom}\nCheck Out Time: ${bookingTo}\n\nThank you for choosing us.`,
     };
 
     // Send the email
@@ -137,7 +137,7 @@ const send_email = async (booking) => {
 
 // Export the function
 module.exports = {
-    get_available_rooms,
+    get_available_cars,
     send_email,
-    checkRoomAvailability
+    checkCarAvailability
 };

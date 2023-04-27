@@ -63,7 +63,7 @@ export default function Rooms() {
         >
             <div className="flex justify-between items-center">
                 <h1 className="text-4xl lg:text-5xl font-black flex items-center gap-2">
-                    Rooms
+                    Cars
                     <span>
                         <CubeIcon className="w-10 h-10" />
                     </span>
@@ -95,7 +95,7 @@ export default function Rooms() {
                             </div>
                             <div className="flex justify-between text-sm px-2 pt-4 pb-1">
                                 <p className="bg-gray-200 px-4 py-1 text-md font-medium rounded-full">
-                                    Room No. {room.roomNumber}
+                                    Car No. {room.roomNumber}
                                 </p>
                             </div>
                             <div className="flex justify-between text-sm px-2 pt-4 pb-1">

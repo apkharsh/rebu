@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const bookingRoutes = require("./routes/bookingRoutes.js");
-const roomRoutes = require("./routes/roomRoutes.js");
+const roomRoutes = require("./routes/carRoutes.js");
 const db = require("./db.js");
 const app = express();
 const cors = require("cors");
@@ -12,7 +12,7 @@ app.use(bodyParser.json(), bodyParser.urlencoded({ extended: true }));
 
 // now use these routes
 app.use("/api/bookings/", bookingRoutes);
-app.use("/api/rooms/", roomRoutes);
+app.use("/api/cars/", roomRoutes);
 
 // connect to MongoDB
 db.on("error", console.error.bind(console, "MongoDB connection error:"));

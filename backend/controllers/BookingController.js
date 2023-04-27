@@ -1,12 +1,12 @@
 // In controllers/bookings.js
 const Booking = require("../models/Booking");
-const Room = require("../models/Room");
-const { get_available_rooms, send_email, checkRoomAvailability } = require("./Helper");
+const Car = require("../models/Car");
+const { get_available_cars, send_email, checkCarAvailability } = require("./Helper");
 
 // /api/bookings/create
 // COMPLETE
-const bookRoom = async (req, res) => {
-    const { username, email, roomType, startTime, endTime, roomNumber } = req.body;
+const bookCar = async (req, res) => {
+    const { username, email, carType, startTime, endTime, carNumber } = req.body;
     
     if (!username || !email || !startTime || !endTime) {
         return res.status(400).json({
@@ -14,43 +14,43 @@ const bookRoom = async (req, res) => {
         });
     } 
     else {
-        // If room number is given, check that exact room
-        if (roomNumber == null) {
+        // If car number is given, check that exact car
+        if (carNumber == null) {
 
-            if (roomType == null) {
+            if (carType == null) {
                 return res.status(400).json({
-                    error: "Please enter a room type",
+                    error: "Please enter a car type",
                 });
             }
 
-            // Get available rooms
-            let available_rooms = await get_available_rooms(
+            // Get available cars
+            let available_cars = await get_available_cars(
                 startTime,
                 endTime,
-                roomType
+                carType
             );
 
-            if (available_rooms.length == 0) {
+            if (available_cars.length == 0) {
                 return res.status(400).json({
-                    error: "No rooms available",
+                    error: "No cars available",
                 });
             } else {
-                // Pick the first room
-                const roomID = available_rooms[0];
+                // Pick the first car
+                const carID = available_cars[0];
 
-                // Get the Price of the room
-                const room = await Room.findById(roomID);
-                const price = room.price;
+                // Get the Price of the car
+                const car = await Car.findById(carID);
+                const price = car.price;
                 const numHours = Math.ceil((endTime - startTime) / 3600000);
                 const totalPrice = price * numHours;
 
                 // Create a new booking
                 const booking = new Booking({
-                    roomID: roomID,
+                    carID: carID,
                     userName: username,
                     email: email,
-                    checkInTime: startTime,
-                    checkOutTime: endTime,
+                    bookingFrom: startTime,
+                    bookingTo: endTime,
                     totalPrice: totalPrice,
                 });
 
@@ -60,10 +60,10 @@ const bookRoom = async (req, res) => {
                 // Populate and send the booking
                 const populated_booking = await Booking.findById(
                     booking._id
-                ).populate("roomID");
+                ).populate("carID");
 
                 // SEND EMAIL TO USER REGARDING THE BOOKING
-                await send_email(populated_booking);
+                // await send_email(populated_booking);
 
                 res.status(200).json({
                     message: "Booking successful",
@@ -71,38 +71,38 @@ const bookRoom = async (req, res) => {
                 });
             }
         } else {
-            // roomNumber is given, check that exact room
+            // carNumber is given, check that exact car
 
-            // Get available rooms
-            let available_rooms = await get_available_rooms(
+            // Get available cars
+            let available_cars = await get_available_cars(
                 startTime,
                 endTime,
-                roomType
+                carType
             );
 
-            // get room with roomNumber
-            const room_wanted = await Room.findOne({ roomNumber: roomNumber });
+            // get car with carNumber
+            const car_wanted = await Car.findOne({ carNumber: carNumber });
 
-            available_rooms = available_rooms.map((room_id) =>
-                room_id.toString()
+            available_cars = available_cars.map((car_id) =>
+                car_id.toString()
             );
 
-            if (available_rooms.includes(room_wanted._id.toString())) {
-                // Book the room
-                const roomID = room_wanted._id;
+            if (available_cars.includes(car_wanted._id.toString())) {
+                // Book the car
+                const carID = car_wanted._id;
 
-                // Get the Price of the room
-                const price = room_wanted.price;
+                // Get the Price of the car
+                const price = car_wanted.price;
                 const numHours = Math.ceil((endTime - startTime) / 3600000);
                 const totalPrice = price * numHours;
 
                 // Create a new booking
                 const booking = new Booking({
-                    roomID: roomID,
+                    carID: carID,
                     userName: username,
                     email: email,
-                    checkInTime: startTime,
-                    checkOutTime: endTime,
+                    bookingFrom: startTime,
+                    bookingTo: endTime,
                     totalPrice: totalPrice,
                 });
 
@@ -112,7 +112,7 @@ const bookRoom = async (req, res) => {
                 // Populate and send the booking
                 const populated_booking = await Booking.findById(
                     booking._id
-                ).populate("roomID");
+                ).populate("carID");
 
                 // SEND EMAIL TO USER REGARDING THE BOOKING
                 await send_email(populated_booking);
@@ -122,9 +122,9 @@ const bookRoom = async (req, res) => {
                     booking: populated_booking,
                 });
             } else {
-                // Room not available
+                // Car not available
                 res.status(400).json({
-                    error: "Room not available",
+                    error: "Car not available",
                 });
             }
         }
@@ -135,14 +135,14 @@ const bookRoom = async (req, res) => {
 // COMPLETE
 const updateBooking = async (req, res) => {
 
-    const { email, username, startTime, endTime, roomNumber } = req.body;
+    const { email, username, startTime, endTime, carNumber } = req.body;
     console.log(req.body);  
     
     // Get the booking with the given id
     // Check if the booking exists
     const { id } = req.params;
 
-    const booking = await Booking.findById(id).populate("roomID");
+    const booking = await Booking.findById(id).populate("carID");
 
     // if booking not found on that id
     if (!booking) {
@@ -170,50 +170,50 @@ const updateBooking = async (req, res) => {
         }
 
         if (startTime) {
-            final_val.checkInTime = startTime;
+            final_val.bookingFrom = startTime;
         }
         else{
-            final_val.checkInTime = booking.startTime;
+            final_val.bookingFrom = booking.startTime;
         }
 
         if (endTime) {
-            final_val.checkOutTime = endTime;
+            final_val.bookingTo = endTime;
         }
         else{
-            final_val.checkOutTime = booking.endTime;
+            final_val.bookingTo = booking.endTime;
         }
 
 
-        if (roomNumber) {
-            // Find Room ID
-            // console.log("checking if room is available or not")
-            const room = await Room.findOne({ roomNumber: roomNumber });
+        if (carNumber) {
+            // Find Car ID
+            // console.log("checking if car is available or not")
+            const car = await Car.findOne({ carNumber: carNumber });
             
-            if (!room) {
-                // console.log("room not found")
+            if (!car) {
+                // console.log("car not found")
                 return res.status(400).json({
-                    error: "Room not found",
+                    error: "Car not found",
                 });
             }
             else
             {
-                // console.log("room found")
-                final_val.roomID = room._id;
+                // console.log("car found")
+                final_val.carID = car._id;
             }
         }
         else
         {
-            final_val.roomID = booking.roomID;
+            final_val.carID = booking.carID;
         }
         // console.log(final_val)
 
         // Check if this booking is possible
-        // Check room availability
-        const isPossible = await checkRoomAvailability(final_val.roomID, final_val.checkInTime, final_val.checkOutTime, booking._id);
+        // Check car availability
+        const isPossible = await checkCarAvailability(final_val.carID, final_val.bookingFrom, final_val.bookingTo, booking._id);
 
         if (!isPossible) {
             return res.status(400).json({
-                error: "Room not available",
+                error: "Car not available",
             });
         }
 
@@ -221,7 +221,7 @@ const updateBooking = async (req, res) => {
         await Booking.findByIdAndUpdate(id, final_val);
 
         // Populate and send the booking
-        const populated_booking = await Booking.findById(id).populate("roomID");
+        const populated_booking = await Booking.findById(id).populate("carID");
 
         return res.status(200).json({
             message: "Booking updated successfully",
@@ -292,23 +292,23 @@ const getRefundAmount = async (req, res) => {
     }
 };
 
-// /api/bookings/all?roomType=A&roomNumber=101&startTime=t1&endTime=t2&id='xyz'
+// /api/bookings/all?carType=A&carNumber=101&startTime=t1&endTime=t2&id='xyz'
 // COMPLETE
 const getBookings = async (req, res) => {
     
     console.log("Find Bookings...");
 
     try {
-        const { id, roomType, roomNumber, startTime, endTime } = await req.query;
+        const { id, carType, carNumber, startTime, endTime } = await req.query;
 
         if (id) {
             // Find a single booking with a bookingId
             const booking = await Booking.findById(id);
 
-            // Populate the room
+            // Populate the car
             const populated_booking = await Booking.findById(
                 booking._id
-            ).populate("roomID");
+            ).populate("carID");
 
             return res.status(200).json({
                 booking: populated_booking,
@@ -319,38 +319,38 @@ const getBookings = async (req, res) => {
             let filters = {};
 
             if (startTime && endTime) {
-                filters.checkInTime = { $gte: startTime };
-                filters.checkOutTime = { $lte: endTime };
+                filters.bookingFrom = { $gte: startTime };
+                filters.bookingTo = { $lte: endTime };
             }
 
             const bookings = await Booking.find(filters);
 
             let filtered_bookings = [];
 
-            // Populate the rooms
+            // Populate the cars
             for (let i = 0; i < bookings.length; i++) {
                 
                 const populated_booking = await Booking.findById(
                     bookings[i]._id
-                ).populate("roomID");
+                ).populate("carID");
 
-                // check if roomType is given
-                if (roomType != null) {
-                    // check if roomType matches
-                    if (populated_booking.roomID.roomType == roomType) {
+                // check if carType is given
+                if (carType != null) {
+                    // check if carType matches
+                    if (populated_booking.carID.carType == carType) {
                         filtered_bookings.push(populated_booking);
                     }
                 }
 
-                // check if roomNumber is given
-                if (roomNumber != null) {
-                    // check if roomNumber matches
-                    if (populated_booking.roomID.roomNumber == roomNumber) {
+                // check if carNumber is given
+                if (carNumber != null) {
+                    // check if carNumber matches
+                    if (populated_booking.carID.carNumber == carNumber) {
                         filtered_bookings.push(populated_booking);
                     }
                 }
 
-                if(roomType == null && roomNumber == null)
+                if(carType == null && carNumber == null)
                     filtered_bookings.push(populated_booking);
             }
             return res.status(200).json({
@@ -366,7 +366,7 @@ const getBookings = async (req, res) => {
 };
 
 module.exports = {
-    bookRoom,
+    bookCar,
     updateBooking,
     deleteBooking,
     getBookings,

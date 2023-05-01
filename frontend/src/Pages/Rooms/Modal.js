@@ -8,8 +8,8 @@ import Success from "../../Assets/Lotties/Success.json";
 
 export default function Modal({ handleModal }) {
     const [data, setData] = useState({
-        roomNumber: "",
-        roomType: "",
+        carNumber: "",
+        carType: "",
         price: null,
     });
 
@@ -32,18 +32,18 @@ export default function Modal({ handleModal }) {
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        const { roomNumber, roomType, price } = data;
+        const { carNumber, carType, price } = data;
 
         try {
             setLoading1(true);
-            const response = await fetch(`${BASE_URL}/rooms/create`, {
+            const response = await fetch(`${BASE_URL}/cars/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     xFormUrlEncoded: "true",
                 },
                 // with data as body
-                body: JSON.stringify({ roomNumber, roomType, price }),
+                body: JSON.stringify({ carNumber, carType, price }),
             });
 
             const data = await response.json();
@@ -118,7 +118,7 @@ export default function Modal({ handleModal }) {
                                     </label>
                                     <input
                                         type="number"
-                                        name="roomNumber"
+                                        name="carNumber"
                                         onChange={handleChange}
                                         placeholder="Number"
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
@@ -130,7 +130,7 @@ export default function Modal({ handleModal }) {
                                     </label>
                                     <input
                                         type="text"
-                                        name="roomType"
+                                        name="carType"
                                         onChange={handleChange}
                                         placeholder="Type"
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"

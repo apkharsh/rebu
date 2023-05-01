@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function BookNow() {
     const navigate = useNavigate();
+
+    
     // const [data, setData] = useState({
     //     username: "",
     //     email: "",
@@ -117,7 +119,6 @@ export default function BookNow() {
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
       };
-
 
 
       const handleSubmit = (e) => {

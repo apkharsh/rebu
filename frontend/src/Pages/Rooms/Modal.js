@@ -10,7 +10,7 @@ export default function Modal({ handleModal }) {
     const [data, setData] = useState({
         roomNumber: "",
         roomType: "",
-        price: 0,
+        price: null,
     });
 
     const [loading1, setLoading1] = useState(false);
@@ -114,7 +114,7 @@ export default function Modal({ handleModal }) {
                             <div className="flex gap-3">
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="" className="text-md">
-                                        Room Number
+                                        Car Number
                                     </label>
                                     <input
                                         type="number"
@@ -126,7 +126,7 @@ export default function Modal({ handleModal }) {
                                 </div>
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="" className="text-md">
-                                        Room Type
+                                        Car Type
                                     </label>
                                     <input
                                         type="text"

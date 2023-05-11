@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema({
-    roomID: {
+    carID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"Room",
+        ref:"Car",
     },
     userName: {
         type: String,
@@ -13,11 +13,11 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    checkInTime: {
+    bookingFrom: {
         type: Number,
         required: true,
     },
-    checkOutTime: {
+    bookingTo: {
         type: Number,
         required: true,
     },

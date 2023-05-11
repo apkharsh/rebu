@@ -21,7 +21,7 @@ export default function Table({ selected }) {
             // change checkInTime and checkOutTime from unix to date and time
             dataLocal.filtered_bookings.forEach((item) => {
                 const currentTime = new Date().getTime();
-                const checkInTime = new Date(item.checkInTime).getTime();
+                const checkInTime = new Date(item.bookingFrom).getTime();
                 const checkOutTime = new Date(item.checkOutTime).getTime();
 
                 if (currentTime >= checkInTime && currentTime <= checkOutTime)
@@ -121,10 +121,10 @@ export default function Table({ selected }) {
                         return (
                             <tr className="border-b" key={item._id}>
                                 <td className="py-2 px-4">
-                                    {item.roomID.roomNumber}
+                                    {item.carID.carNumber}
                                 </td>
                                 <td className="py-2 px-4">
-                                    {item.roomID.roomType}
+                                    {item.carID.roomType}
                                 </td>
                                 <td className="py-2 px-4">{item.userName}</td>
                                 <td className="py-2 px-4">

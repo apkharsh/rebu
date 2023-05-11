@@ -11,6 +11,8 @@ import BookingTemp from "./Components/BookingTemp";
 import Rooms from "./Pages/Rooms/Rooms";
 import CancelRoutes from "./Routes/CancelRoutes";
 import { useState } from "react";
+import Signup from './Pages/Signup/Signup';
+import Login from './Pages/Login/Login';
 
 function App() {
   const route = useLocation().pathname;
@@ -30,7 +32,7 @@ function App() {
     },
     {
       id: 3,
-      name: "Rooms",
+      name: "Cars",
       route: "/rooms",
       icon: <RoomsIcon className="w-6 h-6" />,
     },
@@ -40,6 +42,18 @@ function App() {
       route: "/checkout",
       icon: <CancelIcon className="w-7 h-7" />,
     },
+    {
+      id: 5,
+      name: "Login",
+      route: "/login",
+      icon: <CancelIcon className="w-7 h-7" />,
+    },
+    {
+      id: 6,
+      name: "Sign Up",
+      route: "/signup",
+      icon: <CancelIcon className="w-7 h-7" />,
+    }
   ];
 
   return (
@@ -108,6 +122,8 @@ function App() {
               <Route path="/rooms" element={<Rooms />} />
               <Route path="/checkout/*" element={<CancelRoutes />} />
               <Route path="*" element={<Navigate to="/" />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </div>
         </div>

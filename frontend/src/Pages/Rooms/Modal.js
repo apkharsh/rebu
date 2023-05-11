@@ -8,9 +8,9 @@ import Success from "../../Assets/Lotties/Success.json";
 
 export default function Modal({ handleModal }) {
     const [data, setData] = useState({
-        roomNumber: "",
-        roomType: "",
-        price: 0,
+        carNumber: "",
+        carType: "",
+        price: null,
     });
 
     const [loading1, setLoading1] = useState(false);
@@ -32,18 +32,18 @@ export default function Modal({ handleModal }) {
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        const { roomNumber, roomType, price } = data;
+        const { carNumber, carType, price } = data;
 
         try {
             setLoading1(true);
-            const response = await fetch(`${BASE_URL}/rooms/create`, {
+            const response = await fetch(`${BASE_URL}/cars/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     xFormUrlEncoded: "true",
                 },
                 // with data as body
-                body: JSON.stringify({ roomNumber, roomType, price }),
+                body: JSON.stringify({ carNumber, carType, price }),
             });
 
             const data = await response.json();
@@ -114,11 +114,11 @@ export default function Modal({ handleModal }) {
                             <div className="flex gap-3">
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="" className="text-md">
-                                        Room Number
+                                        Car Number
                                     </label>
                                     <input
                                         type="number"
-                                        name="roomNumber"
+                                        name="carNumber"
                                         onChange={handleChange}
                                         placeholder="Number"
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
@@ -126,11 +126,11 @@ export default function Modal({ handleModal }) {
                                 </div>
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="" className="text-md">
-                                        Room Type
+                                        Car Type
                                     </label>
                                     <input
                                         type="text"
-                                        name="roomType"
+                                        name="carType"
                                         onChange={handleChange}
                                         placeholder="Type"
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"

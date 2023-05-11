@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const roomSchema = new mongoose.Schema({
-    roomNumber: {
+const carSchema = new mongoose.Schema({
+    carNumber: {
         type: Number,
         required: true,
         unique: true
     },
-    roomType: {
+    carType: {
         type: String,
         required: true,
     },
@@ -17,5 +17,6 @@ const roomSchema = new mongoose.Schema({
     }
 });
 
-const Room = mongoose.model("Room", roomSchema);
-module.exports = Room;
+const Car = mongoose.model("Car", carSchema);
+module.exports = Car;
+

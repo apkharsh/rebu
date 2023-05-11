@@ -9,8 +9,8 @@ import { BASE_URL } from "../../Config/url";
 // import { useCallback } from "react";
 
 export default function Rooms() {
-    const [rooms, setRooms] = useState([]);
-    // const [roomNumber, setRoomNumber] = useState(0);
+    const [cars, setRooms] = useState([]);
+    // const [carNumber, setRoomNumber] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -19,25 +19,25 @@ export default function Rooms() {
     };
 
     const getAllRooms = async () => {
-        const res = await fetch(`${BASE_URL}/rooms/all`);
+        const res = await fetch(`${BASE_URL}/cars/all`);
         const data = await res.json();
-        setRooms(data.rooms);
+        setRooms(data.cars);
     };
     
 
-    const handleClick = async (roomNumber) => {
-        // console.log(roomNumber);
+    const handleClick = async (carNumber) => {
+        // console.log(carNumber);
         try {
-            const res = await fetch(`${BASE_URL}/rooms/deleteByNumber/${roomNumber}`, {
+            const res = await fetch(`${BASE_URL}/cars/deleteByNumber/${carNumber}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
             if(res.status === 200) {
-                // fetch again the list of available rooms
+                // fetch again the list of available cars
                 // getAllRooms();
-                console.log("room deleted")
+                console.log("car deleted")
             }
             else{
                 console.log("Error");
@@ -63,7 +63,7 @@ export default function Rooms() {
         >
             <div className="flex justify-between items-center">
                 <h1 className="text-4xl lg:text-5xl font-black flex items-center gap-2">
-                    Rooms
+                    Cars
                     <span>
                         <CubeIcon className="w-10 h-10" />
                     </span>
@@ -79,15 +79,15 @@ export default function Rooms() {
             <div className="border-t border-gray-400"></div>
 
             <div className="flex flex-col justify-center items-center md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 pb-3 overflow-auto">
-                {rooms.map((room) => {
+                {cars.map((car) => {
                     return (
                         <div className="min-w-[15rem] max-w-[16rem] min-h-[12rem] relative shadow-md hover:shadow-xl transition-all ease-linear rounded-2xl flex flex-col overflow-hidden bg-white">
                             <div className="h-24 w-full">
                                 <img
                                     src={
-                                        (room.roomType === "Standard" && A) ||
-                                        (room.roomType === "Deluxe" && B) ||
-                                        (room.roomType === "Supreme" && C)
+                                        (car.carType === "Standard" && A) ||
+                                        (car.carType === "Deluxe" && B) ||
+                                        (car.carType === "Supreme" && C)
                                     }
                                     alt="background"
                                     className="w-full h-full object-cover object-center"
@@ -95,17 +95,17 @@ export default function Rooms() {
                             </div>
                             <div className="flex justify-between text-sm px-2 pt-4 pb-1">
                                 <p className="bg-gray-200 px-4 py-1 text-md font-medium rounded-full">
-                                    Room No. {room.roomNumber}
+                                    Car No. {car.carNumber}
                                 </p>
                             </div>
                             <div className="flex justify-between text-sm px-2 pt-4 pb-1">
                                 <button
                                     onClick={()=>{
-                                        // setRoomNumber(room.roomNumber);
-                                        handleClick(room.roomNumber);
+                                        // setRoomNumber(car.carNumber);
+                                        handleClick(car.carNumber);
                                     }}
                                     name="delete"
-                                    value={room.roomNumber}
+                                    value={car.carNumber}
                                     className="bg-gray-200 px-4 py-1 text-md font-medium rounded-full"
                                 >
                                     delete
@@ -113,10 +113,10 @@ export default function Rooms() {
                             </div>
                             <div className="h-full px-3 py-2 ">
                                 <h1 className="text-2xl font-bold">
-                                    {room.roomType}
+                                    {car.carType}
                                 </h1>
                                 <p className="text-xl font-semibold">
-                                    ₹{room.price}{" "}
+                                    ₹{car.price}{" "}
                                     <span className="text-[14px] text-gray-400 font-normal">
                                         /per hour
                                     </span>{" "}

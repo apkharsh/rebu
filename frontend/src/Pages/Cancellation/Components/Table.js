@@ -5,7 +5,7 @@ export default function Table() {
   const headings = [
     {
       id: 1,
-      name: "Room",
+      name: "Car",
     },
     {
       id: 2,
@@ -13,11 +13,11 @@ export default function Table() {
     },
     {
       id: 3,
-      name: "Check-in",
+      name: "Booked-from",
     },
     {
       id: 4,
-      name: "Check-out",
+      name: "Booked-to",
     },
     {
       id: 5,

@@ -65,11 +65,11 @@ export default function Cancellation() {
     const headings = [
         {
             id: 1,
-            name: "Room No.",
+            name: "Car No.",
         },
         {
             id: 2,
-            name: "Room Type",
+            name: "Car Type",
         },
         {
             id: 3,
@@ -77,11 +77,11 @@ export default function Cancellation() {
         },
         {
             id: 4,
-            name: "Check-in",
+            name: "Booked-from",
         },
         {
             id: 5,
-            name: "Check-out",
+            name: "Booked-to",
         },
         {
             id: 6,

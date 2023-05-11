@@ -6,7 +6,7 @@ const { get_available_cars, send_email, checkCarAvailability } = require("./Help
 // /api/bookings/create
 // COMPLETE
 const bookCar = async (req, res) => {
-    const { username, email, carType, startTime, endTime, carNumber } = req.body;
+    const { userID, username, email, carType, startTime, endTime, carNumber } = req.body;
     
     if (!username || !email || !startTime || !endTime) {
         return res.status(400).json({
@@ -46,6 +46,7 @@ const bookCar = async (req, res) => {
 
                 // Create a new booking
                 const booking = new Booking({
+                    userID: userID,
                     carID: carID,
                     userName: username,
                     email: email,
@@ -98,6 +99,7 @@ const bookCar = async (req, res) => {
 
                 // Create a new booking
                 const booking = new Booking({
+                    userID: userID,
                     carID: carID,
                     userName: username,
                     email: email,
@@ -299,11 +301,12 @@ const getBookings = async (req, res) => {
     console.log("Find Bookings...");
 
     try {
-        const { id, carType, carNumber, startTime, endTime } = await req.query;
+        const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
+        const { userID } = req.body;
 
-        if (id) {
+        if (bookingId) {
             // Find a single booking with a bookingId
-            const booking = await Booking.findById(id);
+            const booking = await Booking.findById(bookingId);
 
             // Populate the car
             const populated_booking = await Booking.findById(
@@ -317,6 +320,10 @@ const getBookings = async (req, res) => {
         else {
 
             let filters = {};
+            // search by userID
+            if (userID) {
+                filters.userID = userID;
+            }
 
             if (startTime && endTime) {
                 filters.bookingFrom = { $gte: startTime };

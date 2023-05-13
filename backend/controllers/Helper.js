@@ -1,6 +1,9 @@
 const Booking = require("../models/Booking");
 const Car = require("../models/Car");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
 // use dotenv
 const dotenv = require("dotenv");
 dotenv.config();
@@ -39,7 +42,6 @@ const get_available_cars = async (
 
         // Return IDs of available rooms if any are found
         return available_cars.map((car) => car._id);
-
     } else {
         const available_cars = await Car.find({
             _id: { $nin: booked_cars },
@@ -50,9 +52,12 @@ const get_available_cars = async (
     }
 };
 
-
-const checkCarAvailability = async (carID, startTime, endTime, bookingIdToIgnore=null) => {
-
+const checkCarAvailability = async (
+    carID,
+    startTime,
+    endTime,
+    bookingIdToIgnore = null
+) => {
     const bookings = await Booking.find({
         $and: [
             { carID: carID },
@@ -81,8 +86,7 @@ const checkCarAvailability = async (carID, startTime, endTime, bookingIdToIgnore
     } else {
         return false;
     }
-}
-
+};
 
 const unix_time_to_date = (unix_time) => {
     const date = new Date(unix_time);
@@ -113,7 +117,7 @@ const send_email = async (booking) => {
         auth: {
             user: process.env.NODEMAILER_EMAIL,
             pass: process.env.NODEMAILER_PASSWORD,
-        }
+        },
     });
 
     // Create the email
@@ -135,9 +139,33 @@ const send_email = async (booking) => {
     });
 };
 
+const checkUserExists = async (email) => {
+    try {
+        const user = await User.findOne({ email: email });
+        if (user) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
+const generateAuthToken = function (data) {
+    data = JSON.stringify(data);
+    const token = jwt.sign(data, "REBULOGINTOKENFORBROWSER", {
+        // expiresIn:"30d",
+    });
+    return token;
+};
+
 // Export the function
 module.exports = {
     get_available_cars,
     send_email,
-    checkCarAvailability
+    checkCarAvailability,
+    checkUserExists,
+    generateAuthToken,
 };

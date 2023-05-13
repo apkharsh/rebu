@@ -1,14 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const bookingRoutes = require("./routes/bookingRoutes.js");
 const roomRoutes = require("./routes/carRoutes.js");
-const bcrypt = require("bcrypt");
-const db = require("./db.js");
-const app = express();
-const cors = require("cors");
-const generateAuthToken = require("./jwtTokenGenerator");
+const userRoutes = require("./routes/userRoutes.js");
 
-const User = require("./models/User");
+const db = require("./db.js");
+const cors = require("cors");
+
+const app = express();
 
 // Middleware
 app.use(cors());

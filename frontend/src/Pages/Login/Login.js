@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 export default function BookNow() {
     const navigate = useNavigate();
 
-    
     // const [data, setData] = useState({
     //     username: "",
     //     email: "",
@@ -21,8 +20,6 @@ export default function BookNow() {
     //     startTime: 0,
     //     endTime: 0,
     // });
-
-    
 
     // const handleChange = (e) => {
     //     const { name, value } = e.target;
@@ -96,13 +93,12 @@ export default function BookNow() {
     //         <Error error={error} />;
     //     }
     // };
-    
+
     // useEffect(() => {
     //     setTimeout(() => {
     //         setError(null);
     //     }, 3000);
     // }, [error]);
-
 
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
@@ -111,44 +107,44 @@ export default function BookNow() {
     const [data, setData] = useState({
         email: "",
         passWord: "",
-      });
+    });
 
-
-      const handleChange = (e) => {
+    const handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
-      };
+    };
 
-
-      const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        
-        try{
+
+        try {
             fetch("http://localhost:5000/login", {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
-          .then((res) => {
-            return res.json();
-          })
-          .then((resData) => {
-            console.log(resData, "resData");
-            localStorage.setItem("myInfo", JSON.stringify(resData.data));
-          })
-          .catch((err) => {
-            console.log("err", err);
-          });
-        }catch (err) {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((resData) => {
+                    console.log(resData, "resData");
+                    localStorage.setItem(
+                        "myInfo",
+                        JSON.stringify(resData.data)
+                    );
+                })
+                .catch((err) => {
+                    console.log("err", err);
+                });
+        } catch (err) {
             setLoading1(false);
             setError(err.message);
             <Error error={error} />;
         }
-      };
-
+    };
 
     return (
         <form onSubmit={handleSubmit} className="relative">
@@ -177,7 +173,6 @@ export default function BookNow() {
                 <div className="flex flex-col md:flex-row gap-5 xl:gap-10 justify-between flex-1">
                     <div className="flex-1 flex flex-col gap-4">
                         {/* Username */}
-                        
 
                         {/* Email */}
                         <div className="flex flex-col gap-2">
@@ -196,7 +191,6 @@ export default function BookNow() {
 
                         {/* password Details */}
                         <div className="flex gap-3">
-                            
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
                                     Password
@@ -209,10 +203,8 @@ export default function BookNow() {
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
                                 />
                             </div>
-                            
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -244,7 +236,7 @@ export default function BookNow() {
                         />
                     </div>
                 )}
-                {error !== null && <Error error={error}/>}
+                {error !== null && <Error error={error} />}
             </AnimatePresence>
         </form>
     );

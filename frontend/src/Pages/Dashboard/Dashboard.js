@@ -16,15 +16,17 @@ export default function Dashboard() {
   let date = new Date();
 
   const [selected, setSelected] = useState("");
-  
-  const isLoggedIn = localStorage.getItem("user");
 
-  if(!isLoggedIn) {
+  let user = localStorage.getItem("user");
+  if(!user) {
     return <Navigate to="/login" />
   }
   
+  user = JSON.parse(user);
+  console.log(user)
+  
   return (
-
+    
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -39,7 +41,7 @@ export default function Dashboard() {
           <h1 className="text-4xl lg:text-5xl font-black ">Dashboard </h1>
           <div className="hidden md:flex gap-3 items-center">
             <img src={avatar} alt="" className="w-7 rounded-full" />
-            <h3 className="font-medium  lg:text-xl">Admin, Welcome</h3>
+            <h3 className="font-medium  lg:text-xl">{user.username}, Welcome</h3>
           </div>
         </div>
 

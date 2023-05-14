@@ -22,12 +22,7 @@ export default function Table({ selected }) {
         console.log("this is logged in PARSED NAME " + JSON.parse(user).user.name);
 
         try {
-            const response = await fetch(`${BASE_URL}/bookings/all`,
-            {
-                body: JSON.stringify({
-                    user: JSON.parse(user).user.email,
-                }),
-            });
+            const response = await fetch(`${BASE_URL}/bookings/all`);
             // const response = await fetch(`${BASE_URL}/bookings/all`,{
             //     params: {}
             // });

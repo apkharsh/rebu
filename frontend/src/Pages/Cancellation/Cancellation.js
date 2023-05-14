@@ -30,11 +30,18 @@ export default function Cancellation() {
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = useState(false);
 
+    const user = localStorage.getItem("user");
+
     // this function is fetching data from the backend for all the bookings
     const fetchData = async () => {
         setLoading(true);
 
-        const response = await fetch(`${BASE_URL}/bookings/all`);
+        const response = await fetch(`${BASE_URL}/bookings/all`,
+        {
+            body: JSON.stringify({
+                user: JSON.parse(user).user.email,
+            }),
+        });
         var dataLocal = await response.json();
         // change checkInTime and checkOutTime from unix to date and time
         dataLocal.filtered_bookings.forEach((item) => {

@@ -62,7 +62,7 @@ function App() {
       <div className="flex">
         {/* Side-panel */}
         {route !== "/" && route !== "/signup" ? <div className="xl:w-[18rem] h-full min-h-screen px-2 py-9 hidden sticky top-0 md:flex flex-col gap-10 ">
-          <h1 className="font-bold text-2xl px-2"> Panel </h1>
+          <h1 className="font-bold text-2xl px-2"> REBU </h1>
 
           <div className="flex flex-col gap-1">
             {links.map((item, index) => {
@@ -95,7 +95,7 @@ function App() {
         {/* Content View */}
         <div className="overflow-hidden w-full">
           {/* Mobile View Navigation */}
-          <div className="w-full flex md:hidden gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
+          {route !== "/" && route !== "/signup" ? <div className="w-full flex md:hidden gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
             {links.map((item, index) => {
               return (
                 <Link
@@ -115,7 +115,7 @@ function App() {
                 </Link>
               );
             })}
-          </div>
+          </div>:""}
 
           {/* Main Routing */}
           <div className="p-5 md:p-5 lg:p-10 w-full border min-h-screen shadow-xl shadow-p2 rounded-xl bg-gray-100 bg-opacity-20 overflow-hidden">

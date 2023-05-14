@@ -64,6 +64,9 @@ export default function BookNow() {
 
     return (
         <form onSubmit={handleSubmit} className="relative">
+            <h1 style={{fontSize:"2.5rem",textAlign:"center",margin:"1rem",fontWeight:"900"}}>REBU</h1>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center" }}>
+            <div>
             <div className="flex flex-col xl:flex-row gap-10">
                 <div className="w-full xl:w-[25%] flex flex-col justify-center xl:justify-start items-center xl:items-start gap-10">
                     <div>
@@ -169,6 +172,8 @@ export default function BookNow() {
                 >
                     Sign Up
                 </button>
+            </div>
+            </div>
             </div>
 
             <AnimatePresence>

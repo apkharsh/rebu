@@ -10,136 +10,57 @@ import Error from "../../Components/Error";
 
 export default function BookNow() {
     const navigate = useNavigate();
-    // const [data, setData] = useState({
-    //     username: "",
-    //     email: "",
-    //     roomType: "",
-    //     roomNumber: null,
-    //     startTime: 0,
-    //     endTime: 0,
-    // });
-   
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-
-    //     // user will enter the date in normal format but backend will only handle unix timestamp
-    //     // so convert the date to unix timestamp
-    //     // console.log(e.target.value);
-    //     if (name === "startTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 startTime: unixTime,
-    //             };
-    //         });
-    //     } else if (name === "endTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 endTime: unixTime,
-    //             };
-    //         });
-    //     } else {
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 [name]: value,
-    //             };
-    //         });
-    //     }
-    // };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setLoading1(true);
-    //     const { username, email, roomType, startTime, endTime } = data;
-
-    //     try {
-    //         const response = await fetch(`${BASE_URL}/bookings/create`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 xFormUrlEncoded: "true",
-    //             },
-    //             body: JSON.stringify({
-    //                 username,
-    //                 email,
-    //                 roomType,
-    //                 startTime,
-    //                 endTime,
-    //             }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         setLoading1(false);
-
-    //         if (data.error) {
-    //             setError(data.error);
-    //         } else {
-    //             setLoading2(true);
-    //             setTimeout(() => {
-    //                 setLoading2(false);
-    //                 navigate("/");
-    //             }, 1000);
-    //         }
-    //     } catch (err) {
-    //         setLoading1(false);
-    //         setError(err.message);
-    //         <Error error={error} />;
-    //     }
-    // };
-    
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setError(null);
-    //     }, 3000);
-    // }, [error]);
-
 
     const [input, setinput] = useState({
         name: "",
         phonenumber: null,
         email: "",
         password: "",
-      });
+    });
+
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState(null);
 
-
     const handleChange = (event) => {
         const { name, value } = event.target;
         setinput({ ...input, [name]: value });
-      };
+    };
 
     function handleSubmit(e) {
         e.preventDefault();
         console.log(input);
     }
 
-
     function Addusertodb(e) {
         e.preventDefault();
         if (input.password !== "" || input.email !== "") {
-          fetch("http://localhost:5000/register", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(input),
-          })
-            .then(() => {
-              console.log("success")
+            setLoading1(true);
+            fetch("http://localhost:5000/api/users/register", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(input),
             })
-            .catch((err) => {
-              console.log(err, "err");
-            });
+                .then(() => {
+                    // setLoading2(true);
+                    console.log("success");
+                    setLoading1(false);
+                    setLoading2(true);
+                    setTimeout(() => {
+                        // navigate("/login");
+                        setLoading2(false);
+                    }, 2000);
+                })
+                .catch((err) => {
+                    console.log(err, "err");
+                    setError(err);
+                    setLoading1(false);
+                });
+
         }
-      }
+    }
 
     return (
         <form onSubmit={handleSubmit} className="relative">
@@ -199,7 +120,6 @@ export default function BookNow() {
 
                         {/* Room Details */}
                         <div className="flex gap-3">
-                            
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
                                     Password
@@ -237,10 +157,8 @@ export default function BookNow() {
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
                                 />
                             </div>
-                            
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -272,7 +190,7 @@ export default function BookNow() {
                         />
                     </div>
                 )}
-                {error !== null && <Error error={error}/>}
+                {error !== null && <Error error={error} />}
             </AnimatePresence>
         </form>
     );

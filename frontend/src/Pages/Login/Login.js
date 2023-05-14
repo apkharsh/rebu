@@ -12,101 +12,13 @@ import "react-toastify/dist/ReactToastify.css";
 export default function BookNow() {
     const navigate = useNavigate();
 
-    // const [data, setData] = useState({
-    //     username: "",
-    //     email: "",
-    //     roomType: "",
-    //     roomNumber: null,
-    //     startTime: 0,
-    //     endTime: 0,
-    // });
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-
-    //     // user will enter the date in normal format but backend will only handle unix timestamp
-    //     // so convert the date to unix timestamp
-    //     // console.log(e.target.value);
-    //     if (name === "startTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 startTime: unixTime,
-    //             };
-    //         });
-    //     } else if (name === "endTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 endTime: unixTime,
-    //             };
-    //         });
-    //     } else {
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 [name]: value,
-    //             };
-    //         });
-    //     }
-    // };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setLoading1(true);
-    //     const { username, email, roomType, startTime, endTime } = data;
-
-    //     try {
-    //         const response = await fetch(`${BASE_URL}/bookings/create`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 xFormUrlEncoded: "true",
-    //             },
-    //             body: JSON.stringify({
-    //                 username,
-    //                 email,
-    //                 roomType,
-    //                 startTime,
-    //                 endTime,
-    //             }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         setLoading1(false);
-
-    //         if (data.error) {
-    //             setError(data.error);
-    //         } else {
-    //             setLoading2(true);
-    //             setTimeout(() => {
-    //                 setLoading2(false);
-    //                 navigate("/");
-    //             }, 1000);
-    //         }
-    //     } catch (err) {
-    //         setLoading1(false);
-    //         setError(err.message);
-    //         <Error error={error} />;
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setError(null);
-    //     }, 3000);
-    // }, [error]);
-
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState(null);
 
     const [data, setData] = useState({
         email: "",
-        passWord: "",
+        password: "",
     });
 
     const handleChange = (e) => {
@@ -119,7 +31,8 @@ export default function BookNow() {
         e.preventDefault();
 
         try {
-            fetch("http://localhost:5000/login", {
+            setLoading1(true);
+            fetch("http://localhost:5000/api/users/login", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -130,13 +43,21 @@ export default function BookNow() {
                     return res.json();
                 })
                 .then((resData) => {
-                    console.log(resData, "resData");
+                    setLoading1(false);
+                    setLoading2(true);
+                    setTimeout(() => {
+                        setLoading2(false);
+                        navigate("/dashboard");
+                    }, 2000);
+                    // console.log(resData, "resData");
                     localStorage.setItem(
                         "myInfo",
                         JSON.stringify(resData.data)
                     );
                 })
                 .catch((err) => {
+                    setLoading1(false);
+                    setError(err.message);
                     console.log("err", err);
                 });
         } catch (err) {

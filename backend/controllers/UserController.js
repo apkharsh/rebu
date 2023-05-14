@@ -25,11 +25,12 @@ const register = async (req, res) => {
                         name: user.name,
                         email: user.email,
                         phonenumber: user.phonenumber,
-                        passWord: hash,
+                        password: hash,
                     });
                     await newUser.save();
                     res.status(200).json({
                         response: "User registered successfully.",
+                        user: newUser,
                     });
                 }
             });
@@ -50,29 +51,30 @@ const login = async (req, res) => {
             });
         }
         else{
-          const user = await User.findOne({ email: email });
-          console.log(user);
-          bcrypt.compare(password, user.passWord, (err, result) => {
-              if (err) {
-                  console.log(err);
-                  res.status(500).json({
-                      response: "Internal server error.",
-                  });
-              } else if (result) {
-                  const token = generateAuthToken(user);
-                  res.status(200).json({
-                      response: "User logged in successfully.",
-                      token: token,
-                      username: user.name,
-                  });
-              } else {
-                  res.status(400).json({ response: "Incorrect password." });
-              }
-          });
+            const user = await User.findOne({ email: email });
+            
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({
+                        response: "Internal server error.",
+                    });
+                } else if (result) {
+                    const token = generateAuthToken(user);
+                    res.status(200).json({
+                        response: "User logged in successfully.",
+                        token: token,
+                        username: user.name,
+                        user: user,
+                    });
+                } else {
+                    res.status(400).json({ response: "Incorrect password." });
+                }
+            });
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json({ response: "Internal server error." });
+        res.status(500).json({ response: "Internal server error. from main catch" });
     }
 };
 

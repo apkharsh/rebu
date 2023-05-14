@@ -13,6 +13,7 @@ import CancelRoutes from "./Routes/CancelRoutes";
 import { useState } from "react";
 import Signup from './Pages/Signup/Signup';
 import Login from './Pages/Login/Login';
+import Panel from "./Components/Panel";
 
 function App() {
   const route = useLocation().pathname;
@@ -21,7 +22,7 @@ function App() {
     {
       id: 1,
       name: "Dashboard",
-      route: "/",
+      route: "/dashboard",
       icon: <BookIcon className="w-6 h-6" />,
     },
     {
@@ -42,25 +43,25 @@ function App() {
       route: "/checkout",
       icon: <CancelIcon className="w-7 h-7" />,
     },
-    {
-      id: 5,
-      name: "Login",
-      route: "/login",
-      icon: <CancelIcon className="w-7 h-7" />,
-    },
-    {
-      id: 6,
-      name: "Sign Up",
-      route: "/signup",
-      icon: <CancelIcon className="w-7 h-7" />,
-    }
+    // {
+    //   id: 5,
+    //   name: "Login",
+    //   route: "/",
+    //   icon: <CancelIcon className="w-7 h-7" />,
+    // },
+    // {
+    //   id: 6,
+    //   name: "Sign Up",
+    //   route: "/signup",
+    //   icon: <CancelIcon className="w-7 h-7" />,
+    // }
   ];
 
   return (
     <div className="text-black">
       <div className="flex">
         {/* Side-panel */}
-        <div className="xl:w-[18rem] h-full min-h-screen px-2 py-9 hidden sticky top-0 md:flex flex-col gap-10 ">
+        {route !== "/" && route !== "/signup" ? <div className="xl:w-[18rem] h-full min-h-screen px-2 py-9 hidden sticky top-0 md:flex flex-col gap-10 ">
           <h1 className="font-bold text-2xl px-2"> Panel </h1>
 
           <div className="flex flex-col gap-1">
@@ -87,7 +88,9 @@ function App() {
               );
             })}
           </div>
-        </div>
+        </div>:""}
+
+        
 
         {/* Content View */}
         <div className="overflow-hidden w-full">
@@ -117,13 +120,14 @@ function App() {
           {/* Main Routing */}
           <div className="p-5 md:p-5 lg:p-10 w-full border min-h-screen shadow-xl shadow-p2 rounded-xl bg-gray-100 bg-opacity-20 overflow-hidden">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Login />} />
               <Route path="/booking" element={<BookingTemp />} />
               <Route path="/rooms" element={<Rooms />} />
               <Route path="/checkout/*" element={<CancelRoutes />} />
               <Route path="*" element={<Navigate to="/" />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+
             </Routes>
           </div>
         </div>

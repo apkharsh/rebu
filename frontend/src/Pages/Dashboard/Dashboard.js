@@ -5,6 +5,7 @@ import B from "../../Assets/Rooms/B.jpeg";
 import C from "../../Assets/Rooms/C.jpg";
 import avatar from "../../Assets/avatar.png";
 import { motion } from "framer-motion";
+import { Navigate } from "react-router-dom";
 
 export default function Dashboard() {
   const cards = [
@@ -16,7 +17,14 @@ export default function Dashboard() {
 
   const [selected, setSelected] = useState("");
   
+  const isLoggedIn = localStorage.getItem("user");
+
+  if(!isLoggedIn) {
+    return <Navigate to="/login" />
+  }
+  
   return (
+
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

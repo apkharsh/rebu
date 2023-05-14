@@ -43,6 +43,10 @@ export default function BookNow() {
                     return res.json();
                 })
                 .then((resData) => {
+                    // Print the Stringified JSON object
+                    let stringifyData = JSON.stringify(resData);
+                    localStorage.setItem("user", stringifyData);
+
                     setLoading1(false);
                     setLoading2(true);
                     setTimeout(() => {

@@ -49,7 +49,7 @@ export default function BookNow() {
                     setLoading1(false);
                     setLoading2(true);
                     setTimeout(() => {
-                        // navigate("/login");
+                        navigate("/login");
                         setLoading2(false);
                     }, 2000);
                 })

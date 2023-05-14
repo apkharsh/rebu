@@ -45,14 +45,19 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         // first check if we have any account under this email
-        if(!checkUserExists(email)){
+        // console.log("this is email: " + email)
+
+        const userExists = await checkUserExists(email);
+        if(!userExists){
+            // console.log("User not registered testing.");
             res.status(400).json({
                 response: "User not registered.",
             });
         }
         else{
+            // console.log("User registered testing.")
             const user = await User.findOne({ email: email });
-            
+            console.log(user);
             bcrypt.compare(password, user.password, (err, result) => {
                 if (err) {
                     console.log(err);

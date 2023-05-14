@@ -148,6 +148,7 @@ const checkUserExists = async (email) => {
             return false;
         }
     } catch (err) {
+        console.log("error here")
         console.log(err);
         return false;
     }

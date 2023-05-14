@@ -8,11 +8,26 @@ export default function Table({ selected }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [filteredData, setFilteredData] = useState([]);
+    // logged in user
+    // console.log(user, "user");
 
     const fetchData = async () => {
         setLoading(true);
+        let user = localStorage.getItem("user");
+
+        console.log("Table.js " + user);
+        console.log("this is logged in " + user);
+        console.log("this is logged in NAME " + user.name);
+        console.log("this is logged in PARSED " + JSON.parse(user));
+        console.log("this is logged in PARSED NAME " + JSON.parse(user).user.name);
+
         try {
-            const response = await fetch(`${BASE_URL}/bookings/all`);
+            const response = await fetch(`${BASE_URL}/bookings/all`,
+            {
+                body: JSON.stringify({
+                    user: JSON.parse(user).user.email,
+                }),
+            });
             // const response = await fetch(`${BASE_URL}/bookings/all`,{
             //     params: {}
             // });
@@ -46,13 +61,16 @@ export default function Table({ selected }) {
     };
     // use effect
     useEffect(() => {
+        console.log("useEffect");
         fetchData();
     }, []);
 
     useEffect(() => {
-      if(selected === "all") return setData(filteredData);
-      const filterData = data.filter((item) => selected ? item.status === selected : true);
-      setData(filterData);
+        if (selected === "all") return setData(filteredData);
+        const filterData = data.filter((item) =>
+            selected ? item.status === selected : true
+        );
+        setData(filterData);
     }, [selected]);
 
     const headings = [

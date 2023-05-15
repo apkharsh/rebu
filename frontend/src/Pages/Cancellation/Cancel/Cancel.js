@@ -42,11 +42,11 @@ export default function Cancel() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        // xFormUrlEncoded: "true",
       },
     })
       .then((res) => {
-        res.json().then((item) => {
+        res.json()
+        .then((item) => {
           console.log(item);
           setRefund(item.Refund);
           console.log(id);
@@ -71,10 +71,11 @@ export default function Cancel() {
           <div className="rounded-2xl shadow-xl w-full pt-10 -mt-1 py-3 px-2 flex flex-col gap-8">
             {/* Refund Amount */}
             <div className="flex flex-col items-center gap-2">
+              <h2>Your Refund amount: </h2>
               <h1 className="font-semibold text-3xl"> ₹{refund} </h1>
               <p className="text-md text-gray-400 pb-1">
                 {" "}
-                Room service & booking cost{" "}
+                Car service & booking cost{" "}
               </p>
               <div className="bg-yellow-200 bg-opacity-40 rounded-xl text-[13px] px-4 py-1 text-yellow-600">
                 &#x2022; Pre-Booked
@@ -100,11 +101,11 @@ export default function Cancel() {
                 <h2 className="font-medium text-lg pb-1"> Checks </h2>
                 <div className="flex items-center gap-3">
                   <h3 className="text-gray-500 w-14"> From: </h3>
-                  <p> {data?.checkInTime.replace(/\//g, "-")} </p>
+                  <p> {data?.bookingFrom.replace(/\//g, "-")} </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <h3 className="text-gray-500 w-14 "> To: </h3>
-                  <p> {data?.checkOutTime.replace(/\//g, "-")} </p>
+                  <p> {data?.bookingTo.replace(/\//g, "-")} </p>
                 </div>
               </div>
             </div>

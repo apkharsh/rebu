@@ -13,8 +13,8 @@ export default function BookNow() {
     const [data, setData] = useState({
         username: "",
         email: "",
-        roomType: "",
-        roomNumber: null,
+        carType: "sedan",
+        carNumber: null,
         startTime: 0,
         endTime: 0,
     });
@@ -58,7 +58,7 @@ export default function BookNow() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading1(true);
-        const { username, email, roomType, startTime, endTime } = data;
+        const { username, email, carType, startTime, endTime } = data;
 
         try {
             const response = await fetch(`${BASE_URL}/bookings/create`, {
@@ -70,7 +70,7 @@ export default function BookNow() {
                 body: JSON.stringify({
                     username,
                     email,
-                    roomType,
+                    carType,
                     startTime,
                     endTime,
                 }),
@@ -86,7 +86,6 @@ export default function BookNow() {
                 setLoading2(true);
                 setTimeout(() => {
                     setLoading2(false);
-                    navigate("/");
                 }, 1000);
             }
         } catch (err) {
@@ -125,7 +124,7 @@ export default function BookNow() {
                     </div>
                 </div>
 
-                {/* username, email, roomType, startTime, endTime, roomNumber  */}
+                {/* username, email, carType, startTime, endTime, carNumber  */}
                 <div className="flex flex-col md:flex-row gap-5 xl:gap-10 justify-between flex-1">
                     <div className="flex-1 flex flex-col gap-4">
                         {/* Username */}
@@ -162,11 +161,11 @@ export default function BookNow() {
                         <div className="flex gap-3">
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
-                                    Room No.
+                                    Car No.
                                 </label>
                                 <input
                                     type="text"
-                                    name="roomNumber"
+                                    name="carNumber"
                                     onChange={handleChange}
                                     placeholder="Optional"
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
@@ -174,20 +173,20 @@ export default function BookNow() {
                             </div>
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
-                                    Room Type
+                                    Car Type
                                 </label>
 
                                 <select
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
-                                    name="roomType"
+                                    name="carType"
                                     id=""
                                     onChange={handleChange}
                                 >
-                                    <option value="Standard" defaultChecked>
-                                        Standard
+                                    <option value="sedan" defaultChecked>
+                                        Sedan
                                     </option>
-                                    <option value="Deluxe">Deluxe</option>
-                                    <option value="Supreme">Supreme</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="hatchback">Hatchback</option>
                                 </select>
                             </div>
                         </div>

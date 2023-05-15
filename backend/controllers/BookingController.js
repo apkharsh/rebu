@@ -7,12 +7,12 @@ const { get_available_cars, send_email, checkCarAvailability } = require("./Help
 // COMPLETE
 const bookCar = async (req, res) => {
     const { userID, username, email, carType, startTime, endTime, carNumber } = req.body;
-    
+
     if (!username || !email || !startTime || !endTime) {
         return res.status(400).json({
             error: "Please enter all the fields",
         });
-    } 
+    }
     else {
         // If car number is given, check that exact car
         if (carNumber == null) {
@@ -84,6 +84,8 @@ const bookCar = async (req, res) => {
             // get car with carNumber
             const car_wanted = await Car.findOne({ carNumber: carNumber });
 
+            console.log(car_wanted);
+
             available_cars = available_cars.map((car_id) =>
                 car_id.toString()
             );
@@ -138,8 +140,8 @@ const bookCar = async (req, res) => {
 const updateBooking = async (req, res) => {
 
     const { email, username, startTime, endTime, carNumber } = req.body;
-    console.log(req.body);  
-    
+    console.log(req.body);
+
     // Get the booking with the given id
     // Check if the booking exists
     const { id } = req.params;
@@ -156,32 +158,32 @@ const updateBooking = async (req, res) => {
     else {
 
         let final_val = {};
-        
+
         if (email) {
             final_val.email = email;
         }
-        else{
+        else {
             final_val.email = booking.email;
         }
 
         if (username) {
             final_val.userName = username;
         }
-        else{
+        else {
             final_val.userName = booking.userName;
         }
 
         if (startTime) {
             final_val.bookingFrom = startTime;
         }
-        else{
+        else {
             final_val.bookingFrom = booking.startTime;
         }
 
         if (endTime) {
             final_val.bookingTo = endTime;
         }
-        else{
+        else {
             final_val.bookingTo = booking.endTime;
         }
 
@@ -190,21 +192,19 @@ const updateBooking = async (req, res) => {
             // Find Car ID
             // console.log("checking if car is available or not")
             const car = await Car.findOne({ carNumber: carNumber });
-            
+
             if (!car) {
                 // console.log("car not found")
                 return res.status(400).json({
                     error: "Car not found",
                 });
             }
-            else
-            {
+            else {
                 // console.log("car found")
                 final_val.carID = car._id;
             }
         }
-        else
-        {
+        else {
             final_val.carID = booking.carID;
         }
         // console.log(final_val)
@@ -280,6 +280,8 @@ const getRefundAmount = async (req, res) => {
                 });
             }
 
+            console.log(booking)
+
             // Calculate the refund amount
             const refundAmount = booking.getRefund();
 
@@ -297,14 +299,20 @@ const getRefundAmount = async (req, res) => {
 // /api/bookings/all?carType=A&carNumber=101&startTime=t1&endTime=t2&id='xyz'
 // COMPLETE
 const getBookings = async (req, res) => {
-    
+
     console.log("Find Bookings...");
 
     try {
         const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
-        const { userID } = req.body;
+        const { userID } = await req.body;
 
-        if (bookingId) {
+        if(userID === "6460f895dee8c9b56d781e79") {
+            const bookings = await Booking.find();
+            console.log("Hello admin");
+            res.status(200).json({
+                bookings: bookings,
+            });
+        } else if (bookingId) {
             // Find a single booking with a bookingId
             const booking = await Booking.findById(bookingId);
 
@@ -313,10 +321,10 @@ const getBookings = async (req, res) => {
                 booking._id
             ).populate("carID");
 
-            return res.status(200).json({
+            res.status(200).json({
                 booking: populated_booking,
             });
-        } 
+        }
         else {
 
             let filters = {};
@@ -336,7 +344,7 @@ const getBookings = async (req, res) => {
 
             // Populate the cars
             for (let i = 0; i < bookings.length; i++) {
-                
+
                 const populated_booking = await Booking.findById(
                     bookings[i]._id
                 ).populate("carID");
@@ -357,16 +365,16 @@ const getBookings = async (req, res) => {
                     }
                 }
 
-                if(carType == null && carNumber == null)
+                if (carType == null && carNumber == null)
                     filtered_bookings.push(populated_booking);
             }
-            return res.status(200).json({
+            res.status(200).json({
                 filtered_bookings,
             });
         }
     } catch (err) {
         console.log(err);
-        return res.status(500).json({
+        res.status(500).json({
             error: "Internal server error",
         });
     }

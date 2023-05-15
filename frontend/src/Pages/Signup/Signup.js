@@ -62,6 +62,10 @@ export default function BookNow() {
         }
     }
 
+    const naviToLogin = () => {
+        navigate("/login");
+    };
+
     return (
         <form onSubmit={handleSubmit} className="relative">
             <div className="flex flex-col xl:flex-row gap-10">
@@ -77,10 +81,6 @@ export default function BookNow() {
                     <div className="text-md text-gray-500">
                         <p className="text-center xl:text-left">
                             Enter the required information to register.
-                        </p>
-                        <p className="text-center xl:text-left ">
-                            {" "}
-                            These are editable.{" "}
                         </p>
                     </div>
                 </div>
@@ -170,6 +170,8 @@ export default function BookNow() {
                     Sign Up
                 </button>
             </div>
+
+            <button className="px-2 text-white py-3 rounded-xl" style={{'backgroundColor':'green'}} onClick={naviToLogin}>Login</button>
 
             <AnimatePresence>
                 {loading1 && (

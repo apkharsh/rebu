@@ -27,48 +27,53 @@ export default function BookNow() {
         setData({ ...data, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             setLoading1(true);
-            fetch("http://localhost:5000/api/users/login", {
+            const res = await fetch("http://localhost:5000/api/users/login", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify(data),
-            })
-                .then((res) => {
-                    return res.json();
-                })
-                .then((resData) => {
-                    // Print the Stringified JSON object
-                    let stringifyData = JSON.stringify(resData);
-                    localStorage.setItem("user", stringifyData);
+            });
 
-                    setLoading1(false);
-                    setLoading2(true);
-                    setTimeout(() => {
-                        setLoading2(false);
-                        navigate("/dashboard");
-                    }, 2000);
-                    // console.log(resData, "resData");
-                    localStorage.setItem(
-                        "myInfo",
-                        JSON.stringify(resData.data)
-                    );
-                })
-                .catch((err) => {
-                    setLoading1(false);
-                    setError(err.message);
-                    console.log("err", err);
-                });
+            const resData = await res.json();
+
+            console.log(resData);
+
+            if (res.status !== 200) {
+                setLoading1(false);
+                setError("Invalid Credentials");
+                <Error error={error} />;
+                setTimeout(() => {
+                    setError(null);
+                }, 3000);
+            } else {
+                let stringifyData = JSON.stringify(resData);
+                localStorage.setItem("user", stringifyData);
+                setLoading1(false);
+                setLoading2(true);
+                setTimeout(() => {
+                    setLoading2(false);
+                    navigate("/dashboard");
+                }, 2000);
+                localStorage.setItem(
+                    "myInfo",
+                    JSON.stringify(resData.data)
+                );
+            }
         } catch (err) {
             setLoading1(false);
             setError(err.message);
             <Error error={error} />;
         }
+    };
+
+    const naviToSignUp = () => {
+        navigate("/signup");
     };
 
     return (
@@ -85,11 +90,7 @@ export default function BookNow() {
 
                     <div className="text-md text-gray-500">
                         <p className="text-center xl:text-left">
-                            Enter the required information to register.
-                        </p>
-                        <p className="text-center xl:text-left ">
-                            {" "}
-                            These are editable.{" "}
+                            Enter the required information to Login.
                         </p>
                     </div>
                 </div>
@@ -141,6 +142,7 @@ export default function BookNow() {
                     Login
                 </button>
             </div>
+            <button className="px-2 text-white py-3 rounded-xl" style={{'backgroundColor':'green'}} onClick={naviToSignUp}> Sign Up</button>
 
             <AnimatePresence>
                 {loading1 && (

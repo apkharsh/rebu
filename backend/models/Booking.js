@@ -35,7 +35,7 @@ bookingSchema.methods.getRefund = function () {
 
     var curr_time = new Date().getTime();
 
-    var remaining_time = this.checkInTime - curr_time;
+    var remaining_time = this.bookingFrom - curr_time;
 
     var remaining_hours = remaining_time / 3600000;
 

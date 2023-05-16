@@ -13,7 +13,7 @@ export default function Table({ selected }) {
 
     const fetchData = async () => {
         setLoading(true);
-        let user = localStorage.getItem("user");
+        // let user = localStorage.getItem("user");
 
         // console.log("Table.js " + user);
         // console.log("this is logged in " + user);
@@ -27,9 +27,6 @@ export default function Table({ selected }) {
             //     params: {}
             // });
             var dataLocal = await response.json();
-            console.log("this is dataLocal")
-            console.log(dataLocal)
-            console.log("datalocal ends here")
 
             // change bookingFrom and bookingTo from unix to date and time
             dataLocal.filtered_bookings.forEach((item) => {
@@ -39,14 +36,11 @@ export default function Table({ selected }) {
 
                 if (currentTime >= bookingFrom && currentTime <= bookingTo)
                     item.status = "checked in";
-                else if (currentTime > bookingTo)
-                    item.status = "checked out";
+                else if (currentTime > bookingTo) item.status = "checked out";
                 else item.status = "not checked in";
 
                 item.bookingFrom = new Date(item.bookingFrom).toLocaleString();
-                item.bookingTo = new Date(
-                    item.bookingTo
-                ).toLocaleString();
+                item.bookingTo = new Date(item.bookingTo).toLocaleString();
             });
             const filterData = dataLocal.filtered_bookings;
             setFilteredData(filterData);
@@ -146,9 +140,7 @@ export default function Table({ selected }) {
                                 <td className="py-2 px-4">
                                     {item.bookingFrom}
                                 </td>
-                                <td className="py-2 px-4">
-                                    {item.bookingTo}
-                                </td>
+                                <td className="py-2 px-4">{item.bookingTo}</td>
                                 <td className="py-2 px-4">{item.totalPrice}</td>
                                 <td className="py-2 px-4">
                                     <p
@@ -162,7 +154,7 @@ export default function Table({ selected }) {
                         item.status === "not checked in" &&
                         "bg-yellow-200 text-yellow-700"
                     }
-                  `}
+                `}
                                     >
                                         &#x2022; &nbsp;{item.status}
                                     </p>

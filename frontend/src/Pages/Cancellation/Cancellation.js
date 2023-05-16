@@ -30,7 +30,7 @@ export default function Cancellation() {
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = useState(false);
 
-    const user = localStorage.getItem("user");
+    const loggedUser = localStorage.getItem("user");
 
     // this function is fetching data from the backend for all the bookings
     const fetchData = async () => {
@@ -38,8 +38,12 @@ export default function Cancellation() {
 
         const response = await fetch(`${BASE_URL}/bookings/all`,
         {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
-                user: JSON.parse(user).user.email,
+                user: JSON.parse(loggedUser).user.email,
             }),
         });
         var dataLocal = await response.json();

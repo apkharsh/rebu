@@ -13,8 +13,8 @@ export default function BookNow() {
     const [data, setData] = useState({
         username: "",
         email: "",
-        roomType: "",
-        roomNumber: null,
+        carType: "",
+        carNumber: null,
         startTime: 0,
         endTime: 0,
     });
@@ -26,39 +26,55 @@ export default function BookNow() {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
+        setData((prevData) => {
+            return {
+                ...prevData,
+                [name]: value,
+            };
+        });
+
+
         // user will enter the date in normal format but backend will only handle unix timestamp
         // so convert the date to unix timestamp
         // console.log(e.target.value);
-        if (name === "startTime") {
-            const unixTime = new Date(value).getTime();
-            setData((prevData) => {
-                return {
-                    ...prevData,
-                    startTime: unixTime,
-                };
-            });
-        } else if (name === "endTime") {
-            const unixTime = new Date(value).getTime();
-            setData((prevData) => {
-                return {
-                    ...prevData,
-                    endTime: unixTime,
-                };
-            });
-        } else {
-            setData((prevData) => {
-                return {
-                    ...prevData,
-                    [name]: value,
-                };
-            });
-        }
+    //     if (name === "startTime") {
+    //         const unixTime = new Date(value).getTime();
+    //         setData((prevData) => {
+    //             return {
+    //                 ...prevData,
+    //                 startTime: unixTime,
+    //             };
+    //         });
+    //     } else if (name === "endTime") {
+    //         const unixTime = new Date(value).getTime();
+    //         setData((prevData) => {
+    //             return {
+    //                 ...prevData,
+    //                 endTime: unixTime,
+    //             };
+    //         });
+    //     } else {
+    //         setData((prevData) => {
+    //             return {
+    //                 ...prevData,
+    //                 [name]: value,
+    //             };
+    //         });
+    //     }
+    };
+
+    // function to convert normal date to unix time stamp
+    const convertToUnix = (date) => {
+        const unixTime = new Date(date).getTime();
+        return unixTime;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading1(true);
-        const { username, email, roomType, startTime, endTime } = data;
+        const { username, email, carType, startTime, endTime } = data;
+        const unixStartTime = convertToUnix(startTime);
+        const unixEndTime = convertToUnix(endTime);
 
         try {
             const response = await fetch(`${BASE_URL}/bookings/create`, {
@@ -70,9 +86,9 @@ export default function BookNow() {
                 body: JSON.stringify({
                     username,
                     email,
-                    roomType,
-                    startTime,
-                    endTime,
+                    carType,
+                    startTime: unixStartTime,
+                    endTime: unixEndTime,
                 }),
             });
 
@@ -86,7 +102,7 @@ export default function BookNow() {
                 setLoading2(true);
                 setTimeout(() => {
                     setLoading2(false);
-                    navigate("/");
+                    navigate("/dashboard");
                 }, 1000);
             }
         } catch (err) {
@@ -125,7 +141,7 @@ export default function BookNow() {
                     </div>
                 </div>
 
-                {/* username, email, roomType, startTime, endTime, roomNumber  */}
+                {/* username, email, carType, startTime, endTime, carNumber  */}
                 <div className="flex flex-col md:flex-row gap-5 xl:gap-10 justify-between flex-1">
                     <div className="flex-1 flex flex-col gap-4">
                         {/* Username */}
@@ -158,15 +174,15 @@ export default function BookNow() {
                             />
                         </div>
 
-                        {/* Room Details */}
+                        {/* Car Details */}
                         <div className="flex gap-3">
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
-                                    Room No.
+                                    Car No.
                                 </label>
                                 <input
                                     type="text"
-                                    name="roomNumber"
+                                    name="carNumber"
                                     onChange={handleChange}
                                     placeholder="Optional"
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
@@ -174,20 +190,20 @@ export default function BookNow() {
                             </div>
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-lg">
-                                    Room Type
+                                    Car Type
                                 </label>
 
                                 <select
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
-                                    name="roomType"
+                                    name="carType"
                                     id=""
                                     onChange={handleChange}
                                 >
-                                    <option value="Standard" defaultChecked>
-                                        Standard
+                                    <option value="Sedan" defaultChecked>
+                                        Sedan
                                     </option>
-                                    <option value="Deluxe">Deluxe</option>
-                                    <option value="Supreme">Supreme</option>
+                                    <option value="Hatchback">Hatchback</option>
+                                    <option value="SUV">SUV</option>
                                 </select>
                             </div>
                         </div>

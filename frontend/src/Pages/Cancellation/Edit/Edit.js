@@ -56,8 +56,8 @@ export default function Edit() {
         // console.log(data)
         const { unixTime, unixTime2 } = formattedData();
 
-        const { userName, email, roomType , checkInTime, checkOutTime } = data;
-        const roomNumber = data.roomNumber;
+        const { userName, email, carType , checkInTime, checkOutTime } = data;
+        const carNumber = data.carNumber;
         // checkin and checkout time is coming form above convertDateTimeLocalToUnixTime function
 
         const response = await fetch(`${BASE_URL}/bookings/update/${id}`, {
@@ -71,8 +71,8 @@ export default function Edit() {
                 email: email,
                 startTime: unixTime,
                 endTime: unixTime2,
-                roomType: roomType,
-                roomNumber: roomNumber,
+                carType: carType,
+                carNumber: carNumber,
             }),
         });
 
@@ -123,7 +123,7 @@ export default function Edit() {
                     </div>
                 </div>
 
-                {/* username, email, roomType, startTime, endTime, roomNumber  */}
+                {/* username, email, carType, startTime, endTime, carNumber  */}
                 <div className="flex flex-col md:flex-row gap-5 xl:gap-10 justify-between flex-1">
                     <div className="flex-1 flex flex-col gap-4">
                         {/* Username */}
@@ -156,29 +156,29 @@ export default function Edit() {
                             />
                         </div>
 
-                        {/* Room Details */}
+                        {/* Car Details */}
                         <div className="flex gap-3">
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-xl">
-                                    Room No.
+                                    Car No.
                                 </label>
                                 <input
                                     type="text"
-                                    name="roomNumber"
+                                    name="carNumber"
                                     placeholder="Number"
-                                    value={data?.roomNumber}
+                                    value={data?.carNumber}
                                     onChange={handleChange}
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
                                 />
                             </div>
                             <div className="flex-1 flex flex-col gap-2">
                                 <label htmlFor="" className="text-xl">
-                                    Room Type
+                                    Car Type
                                 </label>
                                 <input
                                     type="text"
-                                    name="roomType"
-                                    value={data?.roomType}
+                                    name="carType"
+                                    value={data?.carType}
                                     onChange={handleChange}
                                     placeholder="Type"
                                     className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"

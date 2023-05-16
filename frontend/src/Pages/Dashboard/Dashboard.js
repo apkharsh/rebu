@@ -61,7 +61,7 @@ export default function Dashboard() {
                     <div>
                       <img
                         src={item.img}
-                        alt="a type room"
+                        alt="a type Car"
                         className="rounded-3xl w-full h-[8rem] lg:h-[10rem] object-cover"
                       />
                     </div>

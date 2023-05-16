@@ -302,7 +302,12 @@ const getBookings = async (req, res) => {
 
     try {
         const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
-        const { userID } = req.body;
+        
+        console.log(req.query);
+    
+        // console.log("query recieved in backend" + req.params)
+        // const { userID } = req.params.id;
+        // const {userID} = null;
 
         if (bookingId) {
             // Find a single booking with a bookingId
@@ -321,9 +326,9 @@ const getBookings = async (req, res) => {
 
             let filters = {};
             // search by userID
-            if (userID) {
-                filters.userID = userID;
-            }
+            // if (userID) {
+            //     filters.userID = userID;
+            // }
 
             if (startTime && endTime) {
                 filters.bookingFrom = { $gte: startTime };
@@ -348,7 +353,6 @@ const getBookings = async (req, res) => {
                         filtered_bookings.push(populated_booking);
                     }
                 }
-
                 // check if carNumber is given
                 if (carNumber != null) {
                     // check if carNumber matches
@@ -360,6 +364,7 @@ const getBookings = async (req, res) => {
                 if(carType == null && carNumber == null)
                     filtered_bookings.push(populated_booking);
             }
+            console.log("Bookings found" + filtered_bookings)
             return res.status(200).json({
                 filtered_bookings,
             });

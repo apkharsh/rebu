@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router";
 import { BASE_URL } from "../../Config/url";
 import Error from "../../Components/Error";
 import Loader from "../../Assets/Lotties/Loader.json";
 import Lottie from "lottie-react";
 import Success from "../../Assets/Lotties/Success.json";
 
-export default function Modal({ handleModal }) {
+
+export default function Modal({ handleModal, getAllCars }) {
+    
     const [data, setData] = useState({
         carNumber: "",
         carType: "",
@@ -17,6 +20,7 @@ export default function Modal({ handleModal }) {
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState(null);
     // const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,7 +64,11 @@ export default function Modal({ handleModal }) {
                 setTimeout(() => {
                     setLoading2(false);
                     handleModal(false);
+                    getAllCars();
+                    // reload the page
+                    // window.location.reload();
                 },2000)
+
             }
         } catch (err) {
             setError(err);

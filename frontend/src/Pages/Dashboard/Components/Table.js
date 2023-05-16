@@ -15,11 +15,11 @@ export default function Table({ selected }) {
         setLoading(true);
         let user = localStorage.getItem("user");
 
-        console.log("Table.js " + user);
-        console.log("this is logged in " + user);
-        console.log("this is logged in NAME " + user.name);
-        console.log("this is logged in PARSED " + JSON.parse(user));
-        console.log("this is logged in PARSED NAME " + JSON.parse(user).user.name);
+        // console.log("Table.js " + user);
+        // console.log("this is logged in " + user);
+        // console.log("this is logged in NAME " + user.name);
+        // console.log("this is logged in PARSED " + JSON.parse(user));
+        // console.log("this is logged in PARSED NAME " + JSON.parse(user).user.name);
 
         try {
             const response = await fetch(`${BASE_URL}/bookings/all`);
@@ -27,22 +27,25 @@ export default function Table({ selected }) {
             //     params: {}
             // });
             var dataLocal = await response.json();
+            console.log("this is dataLocal")
+            console.log(dataLocal)
+            console.log("datalocal ends here")
 
-            // change checkInTime and checkOutTime from unix to date and time
+            // change bookingFrom and bookingTo from unix to date and time
             dataLocal.filtered_bookings.forEach((item) => {
                 const currentTime = new Date().getTime();
-                const checkInTime = new Date(item.bookingFrom).getTime();
-                const checkOutTime = new Date(item.checkOutTime).getTime();
+                const bookingFrom = new Date(item.bookingFrom).getTime();
+                const bookingTo = new Date(item.bookingTo).getTime();
 
-                if (currentTime >= checkInTime && currentTime <= checkOutTime)
+                if (currentTime >= bookingFrom && currentTime <= bookingTo)
                     item.status = "checked in";
-                else if (currentTime > checkOutTime)
+                else if (currentTime > bookingTo)
                     item.status = "checked out";
                 else item.status = "not checked in";
 
-                item.checkInTime = new Date(item.checkInTime).toLocaleString();
-                item.checkOutTime = new Date(
-                    item.checkOutTime
+                item.bookingFrom = new Date(item.bookingFrom).toLocaleString();
+                item.bookingTo = new Date(
+                    item.bookingTo
                 ).toLocaleString();
             });
             const filterData = dataLocal.filtered_bookings;
@@ -71,11 +74,11 @@ export default function Table({ selected }) {
     const headings = [
         {
             id: 1,
-            name: "Room No.",
+            name: "Car No.",
         },
         {
             id: 2,
-            name: "Room Type",
+            name: "Car Type",
         },
         {
             id: 3,
@@ -83,11 +86,11 @@ export default function Table({ selected }) {
         },
         {
             id: 4,
-            name: "Check-in",
+            name: "Start time",
         },
         {
             id: 5,
-            name: "Check-out",
+            name: "End time",
         },
         {
             id: 6,
@@ -137,14 +140,14 @@ export default function Table({ selected }) {
                                     {item.carID.carNumber}
                                 </td>
                                 <td className="py-2 px-4">
-                                    {item.carID.roomType}
+                                    {item.carID.carType}
                                 </td>
                                 <td className="py-2 px-4">{item.userName}</td>
                                 <td className="py-2 px-4">
-                                    {item.checkInTime}
+                                    {item.bookingFrom}
                                 </td>
                                 <td className="py-2 px-4">
-                                    {item.checkOutTime}
+                                    {item.bookingTo}
                                 </td>
                                 <td className="py-2 px-4">{item.totalPrice}</td>
                                 <td className="py-2 px-4">

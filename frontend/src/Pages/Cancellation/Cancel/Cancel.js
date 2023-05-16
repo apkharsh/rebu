@@ -74,7 +74,7 @@ export default function Cancel() {
               <h1 className="font-semibold text-3xl"> ₹{refund} </h1>
               <p className="text-md text-gray-400 pb-1">
                 {" "}
-                Room service & booking cost{" "}
+                Car service & booking cost{" "}
               </p>
               <div className="bg-yellow-200 bg-opacity-40 rounded-xl text-[13px] px-4 py-1 text-yellow-600">
                 &#x2022; Pre-Booked

@@ -6,10 +6,11 @@ import A from "../../Assets/Rooms/A.png";
 import B from "../../Assets/Rooms/B.jpeg";
 import C from "../../Assets/Rooms/C.jpg";
 import { BASE_URL } from "../../Config/url";
+import Error from "../../Components/Error";
 // import { useCallback } from "react";
-
 export default function Rooms() {
     const [cars, setRooms] = useState([]);
+    const [error, setError] = useState(null);
     // const [carNumber, setRoomNumber] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Rooms() {
         setIsOpen(val);
     };
 
-    const getAllRooms = async () => {
+    const getAllCars = async () => {
         const res = await fetch(`${BASE_URL}/cars/all`);
         const data = await res.json();
         setRooms(data.cars);
@@ -36,10 +37,11 @@ export default function Rooms() {
             });
             if(res.status === 200) {
                 // fetch again the list of available cars
-                // getAllRooms();
-                console.log("car deleted")
+                getAllCars();
             }
             else{
+                
+                setError("Error");
                 console.log("Error");
             }
         } catch (error) {
@@ -48,7 +50,7 @@ export default function Rooms() {
     };
 
     useEffect(() => {
-        getAllRooms();
+        getAllCars();
     }, []);
 
     return (
@@ -127,8 +129,10 @@ export default function Rooms() {
                 })}
             </div>
 
+
             <AnimatePresence>
-                {isOpen && <Modal handleModal={handleModal} />}
+                {isOpen && <Modal handleModal={handleModal} getAllCars={getAllCars}/>}
+                {error !== null && <Error error={error} />}
             </AnimatePresence>
         </motion.div>
     );

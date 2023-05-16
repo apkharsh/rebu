@@ -32,6 +32,10 @@ const get_available_cars = async (
 
     const booked_cars = bookings.map((booking) => booking.carID);
 
+    const allCars = await Car.find();
+
+    console.log(allCars);
+
     if (type_preference != null) {
         const available_cars = await Car.find({
             $and: [

@@ -10,7 +10,6 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // Hourly
     price: {
         type: Number,
         required: true,

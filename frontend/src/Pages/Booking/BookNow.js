@@ -13,7 +13,11 @@ export default function BookNow() {
     const [data, setData] = useState({
         username: "",
         email: "",
+<<<<<<< HEAD
         carType: "",
+=======
+        carType: "sedan",
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
         carNumber: null,
         startTime: 0,
         endTime: 0,
@@ -73,8 +77,11 @@ export default function BookNow() {
         e.preventDefault();
         setLoading1(true);
         const { username, email, carType, startTime, endTime } = data;
+<<<<<<< HEAD
         const unixStartTime = convertToUnix(startTime);
         const unixEndTime = convertToUnix(endTime);
+=======
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
 
         try {
             const response = await fetch(`${BASE_URL}/bookings/create`, {
@@ -87,8 +94,13 @@ export default function BookNow() {
                     username,
                     email,
                     carType,
+<<<<<<< HEAD
                     startTime: unixStartTime,
                     endTime: unixEndTime,
+=======
+                    startTime,
+                    endTime,
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
                 }),
             });
 
@@ -102,7 +114,10 @@ export default function BookNow() {
                 setLoading2(true);
                 setTimeout(() => {
                     setLoading2(false);
+<<<<<<< HEAD
                     navigate("/dashboard");
+=======
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
                 }, 1000);
             }
         } catch (err) {
@@ -199,11 +214,19 @@ export default function BookNow() {
                                     id=""
                                     onChange={handleChange}
                                 >
+<<<<<<< HEAD
                                     <option value="Sedan" defaultChecked>
                                         Sedan
                                     </option>
                                     <option value="Hatchback">Hatchback</option>
                                     <option value="SUV">SUV</option>
+=======
+                                    <option value="sedan" defaultChecked>
+                                        Sedan
+                                    </option>
+                                    <option value="suv">SUV</option>
+                                    <option value="hatchback">Hatchback</option>
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
                                 </select>
                             </div>
                         </div>

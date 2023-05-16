@@ -36,6 +36,7 @@ export default function Cancellation() {
     const fetchData = async () => {
         setLoading(true);
 
+<<<<<<< HEAD
         const response = await fetch(`${BASE_URL}/bookings/all`,
         {
             method: "GET",
@@ -46,20 +47,34 @@ export default function Cancellation() {
                 user: JSON.parse(loggedUser).user.email,
             }),
         });
+=======
+        const user = localStorage.getItem("user");
+        let userInfo = await JSON.parse(user);
+        userInfo = userInfo.user;
+
+        const response = await fetch(`${BASE_URL}/bookings/all`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: userInfo._id}),
+        });
+
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
         var dataLocal = await response.json();
         // change checkInTime and checkOutTime from unix to date and time
         dataLocal.filtered_bookings.forEach((item) => {
 
             const currentTime = new Date().getTime();
-            const checkInTime = new Date(item.checkInTime).getTime();
-            const checkOutTime = new Date(item.checkOutTime).getTime();
+            const checkInTime = new Date(item.bookingFrom).getTime();
+            const checkOutTime = new Date(item.bookingTo).getTime();
 
             if (currentTime >= checkInTime && currentTime <= checkOutTime) item.status = "checked in";
             else if (currentTime > checkOutTime) item.status = "checked out";
             else item.status = "not checked in";
 
-            item.checkInTime = convertTime(item.checkInTime);
-            item.checkOutTime = convertTime(item.checkOutTime);
+            item.bookingFrom = convertTime(item.bookingFrom);
+            item.bookingTo = convertTime(item.bookingTo);
         });
 
         console.log(dataLocal.filtered_bookings)
@@ -142,19 +157,19 @@ export default function Cancellation() {
                                 return (
                                     <tr className="border-b" key={item._id}>
                                         <td className="py-2 px-4">
-                                            {item.roomID.roomNumber}
+                                            {item.carID.carNumber}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.roomID.roomType}
+                                            {item.carID.carType}
                                         </td>
                                         <td className="py-2 px-4">
                                             {item.userName}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.checkInTime}
+                                            {item.bookingFrom}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.checkOutTime}
+                                            {item.bookingTo}
                                         </td>
                                         <td className="py-2 px-4">
                                             {item.totalPrice}

@@ -8,6 +8,7 @@ export default function Table({ selected }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [filteredData, setFilteredData] = useState([]);
+    const [user, setUser] = useState({});
     // logged in user
     // console.log(user, "user");
 
@@ -15,6 +16,7 @@ export default function Table({ selected }) {
         setLoading(true);
         // let user = localStorage.getItem("user");
 
+<<<<<<< HEAD
         // console.log("Table.js " + user);
         // console.log("this is logged in " + user);
         // console.log("this is logged in NAME " + user.name);
@@ -33,6 +35,32 @@ export default function Table({ selected }) {
                 const currentTime = new Date().getTime();
                 const bookingFrom = new Date(item.bookingFrom).getTime();
                 const bookingTo = new Date(item.bookingTo).getTime();
+=======
+        let userInfo = await JSON.parse(user);
+        userInfo = userInfo.user;
+        setUser(userInfo);
+
+        console.log(userInfo);
+
+        try {
+            const response = await fetch(`${BASE_URL}/bookings/all`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: userInfo._id }),
+            });
+
+            const dataLocal = await response.json();
+
+            console.log(dataLocal);
+
+
+            dataLocal.filtered_bookings.forEach((item) => {
+                const currentTime = new Date().getTime();
+                const checkInTime = new Date(item.bookingFrom).getTime();
+                const checkOutTime = new Date(item.bookingTo).getTime();
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
 
                 if (currentTime >= bookingFrom && currentTime <= bookingTo)
                     item.status = "checked in";
@@ -40,20 +68,26 @@ export default function Table({ selected }) {
                 else item.status = "not checked in";
 
                 item.bookingFrom = new Date(item.bookingFrom).toLocaleString();
+<<<<<<< HEAD
                 item.bookingTo = new Date(item.bookingTo).toLocaleString();
+=======
+                item.bookingTo = new Date(
+                    item.bookingTo
+                ).toLocaleString();
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
             });
             const filterData = dataLocal.filtered_bookings;
             setFilteredData(filterData);
-            setData(filterData);
+            setData(dataLocal.filtered_bookings);
             setLoading(false);
-        } catch (error) {
+        } catch (err) {
+            console.log(err);
             setLoading(false);
-            setError("Something went wrong");
+            setError(err.message);
         }
     };
-    // use effect
+
     useEffect(() => {
-        console.log("useEffect");
         fetchData();
     }, []);
 
@@ -76,6 +110,7 @@ export default function Table({ selected }) {
         },
         {
             id: 3,
+<<<<<<< HEAD
             name: "Customer",
         },
         {
@@ -85,47 +120,45 @@ export default function Table({ selected }) {
         {
             id: 5,
             name: "End time",
+=======
+            name: "Check-in",
         },
         {
-            id: 6,
+            id: 4,
+            name: "Check-out",
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
+        },
+        {
+            id: 5,
             name: "Amount",
         },
         {
-            id: 7,
+            id: 6,
             name: "Status",
         },
+        (user.email === 'abc@gmail.com') ? ({
+            id: 0,
+            name: "Customer Name",
+        }) : (<></>)
     ];
 
     return (
-        <table className="w-full min-w-[10rem] overflow-auto">
-            <thead className="bg-zinc-100 bg-opacity-50">
-                <tr>
-                    {headings.map((item) => {
-                        return (
-                            <td
-                                key={item.id}
-                                className="py-3 px-4 min-w-[150px] text-zinc-600"
-                            >
-                                <p>{item.name}</p>
-                            </td>
-                        );
-                    })}
-                </tr>
-            </thead>
-            <tbody className="bg-white text-black">
-                {loading ? (
+        <>
+            <table className="w-full min-w-[10rem] overflow-auto">
+                <thead className="bg-zinc-100 bg-opacity-50">
                     <tr>
-                        <td colSpan="7">
-                            <div className="w-full flex flex-col justify-center items-center">
-                                <Lottie
-                                    className="w-52"
-                                    animationData={Loader}
-                                    loop={true}
-                                />
-                                <p className="-mt-8 pb-2">Loading...</p>
-                            </div>
-                        </td>
+                        {headings.map((item) => {
+                            return (
+                                <td
+                                    key={item.id}
+                                    className="py-3 px-4 min-w-[150px] text-zinc-600"
+                                >
+                                    <p>{item.name}</p>
+                                </td>
+                            );
+                        })}
                     </tr>
+<<<<<<< HEAD
                 ) : (
                     data.map((item) => {
                         return (
@@ -165,5 +198,98 @@ export default function Table({ selected }) {
                 )}
             </tbody>
         </table>
+=======
+                </thead>
+                <tbody className="bg-white text-black">
+                    {loading ? (
+                        <tr>
+                            <td colSpan="7">
+                                <div className="w-full flex flex-col justify-center items-center">
+                                    <Lottie
+                                        className="w-52"
+                                        animationData={Loader}
+                                        loop={true}
+                                    />
+                                    <p className="-mt-8 pb-2">Loading...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    ) : (
+                        data.map((item) => {
+                            if (user.email === 'abc@gmail.com') {
+                                return (
+                                    <tr className="border-b" key={item._id}>
+                                        <td className="py-2 px-4">
+                                            {item.carID.carNumber}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            {item.carID.carType}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            {item.bookingFrom}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            {item.bookingTo}
+                                        </td>
+                                        <td className="py-2 px-4">{item.totalPrice}</td>
+                                        <td className="py-2 px-4">
+                                            <p
+                                                className={`border w-[max-content] px-2 py-1 rounded-md text-[14px] capitalize
+                    ${item.status === "checked in" && "bg-red-200 text-red-700"}
+                    ${item.status === "checked out" &&
+                                                    "bg-green-200 text-green-700"
+                                                    }
+                    ${item.status === "not checked in" &&
+                                                    "bg-yellow-200 text-yellow-700"
+                                                    }
+                  `}
+                                            >
+                                                &#x2022; &nbsp;{item.status}
+                                            </p>
+                                        </td>
+                                        {(user.email === 'abc@gmail.com') ? (<td className="py-2 px-4">{item.userName}</td>) : <></>}
+                                    </tr>
+                                )
+                            } else {
+                                if (item.email === user.email) {
+                                    return (
+                                        <tr className="border-b" key={item._id}>
+                                            <td className="py-2 px-4">
+                                                {item.carID.carNumber}
+                                            </td>
+                                            <td className="py-2 px-4">
+                                                {item.carID.carType}
+                                            </td>
+                                            <td className="py-2 px-4">
+                                                {item.bookingFrom}
+                                            </td>
+                                            <td className="py-2 px-4">
+                                                {item.bookingTo}
+                                            </td>
+                                            <td className="py-2 px-4">{item.totalPrice}</td>
+                                            <td className="py-2 px-4">
+                                                <p
+                                                    className={`border w-[max-content] px-2 py-1 rounded-md text-[14px] capitalize
+                        ${item.status === "checked in" && "bg-red-200 text-red-700"}
+                        ${item.status === "checked out" &&
+                                                        "bg-green-200 text-green-700"
+                                                        }
+                        ${item.status === "not checked in" &&
+                                                        "bg-yellow-200 text-yellow-700"
+                                                        }
+                      `}
+                                                >
+                                                    &#x2022; &nbsp;{item.status}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            }
+                        }))}
+                </tbody>
+            </table>
+        </>
+>>>>>>> afaf40d7c8def95c475dc49801f119653ff58f04
     );
 }

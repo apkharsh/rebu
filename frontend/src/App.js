@@ -43,12 +43,12 @@ function App() {
       route: "/checkout",
       icon: <CancelIcon className="w-7 h-7" />,
     },
-    // {
-    //   id: 5,
-    //   name: "Login",
-    //   route: "/",
-    //   icon: <CancelIcon className="w-7 h-7" />,
-    // },
+    {
+      id: 5,
+      name: "Logout",
+      route: "/",
+      icon: <CancelIcon className="w-7 h-7" />,
+    },
     // {
     //   id: 6,
     //   name: "Sign Up",

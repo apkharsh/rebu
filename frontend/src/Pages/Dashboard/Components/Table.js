@@ -29,9 +29,6 @@ export default function Table({ selected }) {
             //     params: {}
             // });
             var dataLocal = await response.json();
-            // console.log("this is dataLocal");
-            // console.log(dataLocal);
-            // console.log("datalocal ends here");
 
             // change bookingFrom and bookingTo from unix to date and time
             dataLocal.filtered_bookings.forEach((item) => {

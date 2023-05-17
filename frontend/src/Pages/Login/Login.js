@@ -52,7 +52,7 @@ export default function BookNow() {
                 // with data as body
                 body: JSON.stringify(data),
             });
-            console.log(response.status, "parsedData.status")
+            // console.log(response.status, "parsedData.status")
 
             const parsedData = await response.json();
             console.log(parsedData, "parsedData");

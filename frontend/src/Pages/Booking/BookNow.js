@@ -32,35 +32,6 @@ export default function BookNow() {
                 [name]: value,
             };
         });
-
-
-        // user will enter the date in normal format but backend will only handle unix timestamp
-        // so convert the date to unix timestamp
-        // console.log(e.target.value);
-    //     if (name === "startTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 startTime: unixTime,
-    //             };
-    //         });
-    //     } else if (name === "endTime") {
-    //         const unixTime = new Date(value).getTime();
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 endTime: unixTime,
-    //             };
-    //         });
-    //     } else {
-    //         setData((prevData) => {
-    //             return {
-    //                 ...prevData,
-    //                 [name]: value,
-    //             };
-    //         });
-    //     }
     };
 
     // function to convert normal date to unix time stamp
@@ -111,7 +82,7 @@ export default function BookNow() {
             <Error error={error} />;
         }
     };
-    
+
     useEffect(() => {
         setTimeout(() => {
             setError(null);
@@ -199,9 +170,8 @@ export default function BookNow() {
                                     id=""
                                     onChange={handleChange}
                                 >
-                                    <option value="Sedan" defaultChecked>
-                                        Sedan
-                                    </option>
+                                    <option value="" disabled selected className="hidden"></option>
+                                    <option value="Sedan">Sedan</option>
                                     <option value="Hatchback">Hatchback</option>
                                     <option value="SUV">SUV</option>
                                 </select>
@@ -220,10 +190,7 @@ export default function BookNow() {
                                 onChange={handleChange}
                                 required
                             />
-                            <p className="text-[16px] text-gray-600">
-                                {" "}
-                                Check-in{" "}
-                            </p>
+                            <p className="text-[16px] text-gray-600"> Start </p>
                         </div>
                         <div className="rounded-md border px-4 py-5 w-full h-full bg-white flex flex-col justify-between shadow hover:shadow-lg transition-all ease-linear">
                             <input
@@ -233,11 +200,9 @@ export default function BookNow() {
                                 required
                                 className="text-2xl font-bold outline-none"
                                 onChange={handleChange}
+                                // onfocus={this.showPicker()}
                             />
-                            <p className="text-[16px] text-gray-600">
-                                {" "}
-                                Check-out{" "}
-                            </p>
+                            <p className="text-[16px] text-gray-600"> End </p>
                         </div>
                     </div>
                 </div>
@@ -271,7 +236,7 @@ export default function BookNow() {
                         />
                     </div>
                 )}
-                {error !== null && <Error error={error}/>}
+                {error !== null && <Error error={error} />}
             </AnimatePresence>
         </form>
     );

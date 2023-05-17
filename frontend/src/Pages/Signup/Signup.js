@@ -28,22 +28,17 @@ export default function BookNow() {
         setinput({ ...input, [name]: value });
     };
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        console.log(input);
-    }
-
     const registerUser = async (e) => {
         e.preventDefault();
         try {
-            setLoading1(true);
-            if (input.password == "" || input.email == "") {
+            if (input.password === "" || input.email === "") {
                 setError("Please enter all the fields");
                 setTimeout(() => {
                     setError(null);
-                    setLoading1(false);
+                    // setLoading1(false);
                 }, 2000);
             } else {
+                setLoading1(true);
                 const response = await fetch(`${BASE_URL}/users/register`, {
                     method: "POST",
                     headers: {
@@ -53,13 +48,21 @@ export default function BookNow() {
                     // with data as body
                     body: JSON.stringify(input),
                 });
-                // const data = await response.json();
+                const parsedData = await response.json();
+                // console.log(parsedData, "parsedData")
                 if (response.status === 200) {
                     setLoading1(false);
                     setLoading2(true);
                     setTimeout(() => {
                         navigate("/login");
                         setLoading2(false);
+                    }, 2000);
+                }
+                else{
+                    setLoading1(false);
+                    setError(parsedData.response);
+                    setTimeout(() => {
+                        setError(null);
                     }, 2000);
                 }
             }
@@ -103,7 +106,7 @@ export default function BookNow() {
     // }
 
     return (
-        <form onSubmit={handleSubmit} className="relative">
+        <form onSubmit={registerUser} className="relative">
             <h1
                 style={{
                     fontSize: "2.5rem",

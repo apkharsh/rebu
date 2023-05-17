@@ -43,6 +43,12 @@ function App() {
       route: "/checkout",
       icon: <CancelIcon className="w-7 h-7" />,
     },
+    {
+      id: 5,
+      name: "Logout",
+      route: "/",
+      icon: <CancelIcon className="w-7 h-7" />,
+    },
     // {
     //   id: 5,
     //   name: "Login",
@@ -121,12 +127,12 @@ function App() {
           <div className="p-5 md:p-5 lg:p-10 w-full border min-h-screen shadow-xl shadow-p2 rounded-xl bg-gray-100 bg-opacity-20 overflow-hidden">
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/booking" element={<BookingTemp />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/rooms" element={<Rooms />} />
               <Route path="/checkout/*" element={<CancelRoutes />} />
               <Route path="*" element={<Navigate to="/" />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
 
             </Routes>
           </div>

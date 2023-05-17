@@ -77,8 +77,7 @@ export default function Edit() {
         });
 
         const result = await response.json();
-        // console.log(result);
-
+        
         setLoading1(false);
         if (result.error) {
             setError(result.error);
@@ -88,7 +87,8 @@ export default function Edit() {
             setLoading2(true);
             setTimeout(() => {
                 setLoading2(false);
-                navigate("/");
+                // navigate("/");
+
             }, 1000);
         }
     };

@@ -13,23 +13,25 @@ export default function Table({ selected }) {
 
     const fetchData = async () => {
         setLoading(true);
-        let user = localStorage.getItem("user");
-
-        // console.log("Table.js " + user);
-        // console.log("this is logged in " + user);
-        // console.log("this is logged in NAME " + user.name);
-        // console.log("this is logged in PARSED " + JSON.parse(user));
-        // console.log("this is logged in PARSED NAME " + JSON.parse(user).user.name);
-
+        let user = await JSON.parse(localStorage.getItem("user"));
+        // console.log(user.user.email);
         try {
-            const response = await fetch(`${BASE_URL}/bookings/all`);
+            const response = await fetch(`${BASE_URL}/bookings/all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user: user.user.email,
+                }),
+            });
             // const response = await fetch(`${BASE_URL}/bookings/all`,{
             //     params: {}
             // });
             var dataLocal = await response.json();
-            console.log("this is dataLocal")
-            console.log(dataLocal)
-            console.log("datalocal ends here")
+            // console.log("this is dataLocal");
+            // console.log(dataLocal);
+            // console.log("datalocal ends here");
 
             // change bookingFrom and bookingTo from unix to date and time
             dataLocal.filtered_bookings.forEach((item) => {
@@ -39,14 +41,11 @@ export default function Table({ selected }) {
 
                 if (currentTime >= bookingFrom && currentTime <= bookingTo)
                     item.status = "checked in";
-                else if (currentTime > bookingTo)
-                    item.status = "checked out";
+                else if (currentTime > bookingTo) item.status = "checked out";
                 else item.status = "not checked in";
 
                 item.bookingFrom = new Date(item.bookingFrom).toLocaleString();
-                item.bookingTo = new Date(
-                    item.bookingTo
-                ).toLocaleString();
+                item.bookingTo = new Date(item.bookingTo).toLocaleString();
             });
             const filterData = dataLocal.filtered_bookings;
             setFilteredData(filterData);
@@ -59,7 +58,7 @@ export default function Table({ selected }) {
     };
     // use effect
     useEffect(() => {
-        console.log("useEffect");
+        // console.log("useEffect");
         fetchData();
     }, []);
 
@@ -146,9 +145,7 @@ export default function Table({ selected }) {
                                 <td className="py-2 px-4">
                                     {item.bookingFrom}
                                 </td>
-                                <td className="py-2 px-4">
-                                    {item.bookingTo}
-                                </td>
+                                <td className="py-2 px-4">{item.bookingTo}</td>
                                 <td className="py-2 px-4">{item.totalPrice}</td>
                                 <td className="py-2 px-4">
                                     <p

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { bookCar, getBookings, updateBooking, deleteBooking, getRefundAmount } = require('../controllers/BookingController.js');
 
-router.get('/all', getBookings); // Search Params will be used
+router.post('/all', getBookings); // Search Params will be used
 router.get('/getRefundAmount/:id', getRefundAmount);
 router.post('/create', bookCar);
 router.post('/update/:id', updateBooking);

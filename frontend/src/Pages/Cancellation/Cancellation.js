@@ -9,8 +9,13 @@ import { BASE_URL } from "../../Config/url";
 export default function Cancellation() {
     // converting time from unix to date and time so that it can be used in input type="datetime-local"
     function convertTime(unixTime) {
-        
+        // console.log(unixTime)
         const dateObj = new Date(unixTime);
+        // console.log(dateObj);
+        // var temp = unixTime.toString();
+        // if (temp.length === 10) {
+            // dateObj.setTime(unixTime * 1000);
+        // }
         if (unixTime.toString().length === 10) {
             // Unix time is in seconds, convert to milliseconds
             dateObj.setTime(unixTime * 1000);
@@ -22,7 +27,7 @@ export default function Cancellation() {
         const hours = ("0" + dateObj.getHours()).slice(-2);
         const minutes = ("0" + dateObj.getMinutes()).slice(-2);
 
-        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+        const formattedDate = `${year}-${month}-${day} T ${hours}:${minutes}`;
         return formattedDate;
     }
 
@@ -30,45 +35,42 @@ export default function Cancellation() {
     const [data, setData] = React.useState([]);
     const [loading, setLoading] = useState(false);
 
-    const loggedUser = localStorage.getItem("user");
-
     // this function is fetching data from the backend for all the bookings
     const fetchData = async () => {
         setLoading(true);
+        let user = await JSON.parse(localStorage.getItem("user"));
 
-        const response = await fetch(`${BASE_URL}/bookings/all`,
-        {
-            method: "GET",
+        const response = await fetch(`${BASE_URL}/bookings/all`, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                user: JSON.parse(loggedUser).user.email,
+                user: user.user.email,
             }),
         });
+
         var dataLocal = await response.json();
-        // change checkInTime and checkOutTime from unix to date and time
+        // change bookingFrom and bookingTo from unix to date and time
+        // console.log(dataLocal.filtered_bookings)
         dataLocal.filtered_bookings.forEach((item) => {
-
             const currentTime = new Date().getTime();
-            const checkInTime = new Date(item.checkInTime).getTime();
-            const checkOutTime = new Date(item.checkOutTime).getTime();
+            const bookingFrom = new Date(item.bookingFrom).getTime();
+            const bookingTo = new Date(item.bookingTo).getTime();
 
-            if (currentTime >= checkInTime && currentTime <= checkOutTime) item.status = "checked in";
-            else if (currentTime > checkOutTime) item.status = "checked out";
+            if (currentTime >= bookingFrom && currentTime <= bookingTo)
+                item.status = "checked in";
+            else if (currentTime > bookingTo) item.status = "checked out";
             else item.status = "not checked in";
-
-            item.checkInTime = convertTime(item.checkInTime);
-            item.checkOutTime = convertTime(item.checkOutTime);
+            
+            item.bookingFrom = convertTime(item.bookingFrom);
+            item.bookingTo = convertTime(item.bookingTo);
         });
-
-        console.log(dataLocal.filtered_bookings)
 
         setData(dataLocal.filtered_bookings);
         setLoading(false);
     };
 
-    // use effect
     React.useEffect(() => {
         fetchData();
     }, []);
@@ -142,19 +144,19 @@ export default function Cancellation() {
                                 return (
                                     <tr className="border-b" key={item._id}>
                                         <td className="py-2 px-4">
-                                            {item.roomID.roomNumber}
+                                            {item.carID.carNumber}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.roomID.roomType}
+                                            {item.carID.carType}
                                         </td>
                                         <td className="py-2 px-4">
                                             {item.userName}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.checkInTime}
+                                            {item.bookingFrom}
                                         </td>
                                         <td className="py-2 px-4">
-                                            {item.checkOutTime}
+                                            {item.bookingTo}
                                         </td>
                                         <td className="py-2 px-4">
                                             {item.totalPrice}

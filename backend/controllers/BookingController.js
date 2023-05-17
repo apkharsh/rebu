@@ -138,7 +138,7 @@ const bookCar = async (req, res) => {
 const updateBooking = async (req, res) => {
 
     const { email, username, startTime, endTime, carNumber } = req.body;
-    console.log(req.body);  
+    // console.log(req.body);  
     
     // Get the booking with the given id
     // Check if the booking exists
@@ -298,17 +298,13 @@ const getRefundAmount = async (req, res) => {
 // COMPLETE
 const getBookings = async (req, res) => {
     
-    console.log("Find Bookings...");
+    console.log("Finding Bookings...");
+    // console.log(req.body)
 
     try {
         const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
-        
-        console.log(req.query);
-    
-        // console.log("query recieved in backend" + req.params)
-        // const { userID } = req.params.id;
-        // const {userID} = null;
-
+        const { user } = req.body;
+        console.log(user)
         if (bookingId) {
             // Find a single booking with a bookingId
             const booking = await Booking.findById(bookingId);
@@ -325,10 +321,10 @@ const getBookings = async (req, res) => {
         else {
 
             let filters = {};
-            // search by userID
-            // if (userID) {
-            //     filters.userID = userID;
-            // }
+            // search by email
+            if (user) {
+                filters.email = user;
+            }
 
             if (startTime && endTime) {
                 filters.bookingFrom = { $gte: startTime };

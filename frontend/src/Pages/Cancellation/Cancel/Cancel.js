@@ -14,6 +14,7 @@ export default function Cancel() {
   const navigate = useNavigate();
   const location = useLocation();
   const [data, setData] = useState(location.state?.data);
+  console.log(data)
 
   const { id } = useParams();
 
@@ -100,11 +101,13 @@ export default function Cancel() {
                 <h2 className="font-medium text-lg pb-1"> Checks </h2>
                 <div className="flex items-center gap-3">
                   <h3 className="text-gray-500 w-14"> From: </h3>
-                  <p> {data?.checkInTime.replace(/\//g, "-")} </p>
+                  <p> {data?.bookingFrom} </p>
+                  {/* <p> {data?.bookedFrom.replace(/\//g, "-")} </p> */}
                 </div>
                 <div className="flex items-center gap-3">
                   <h3 className="text-gray-500 w-14 "> To: </h3>
-                  <p> {data?.checkOutTime.replace(/\//g, "-")} </p>
+                  {/* <p> {data?.bookingTo.replace(/\//g, "-")} </p> */}
+                  <p> {data?.bookingTo} </p>
                 </div>
               </div>
             </div>

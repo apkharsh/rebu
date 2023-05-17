@@ -45,7 +45,6 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         // first check if we have any account under this email
-        // console.log("this is email: " + email)
 
         const userExists = await checkUserExists(email);
         if(!userExists){

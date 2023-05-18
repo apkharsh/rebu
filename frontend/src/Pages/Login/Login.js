@@ -17,7 +17,6 @@ export default function BookNow() {
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState(null);
-    // const [user, setSuccess] = useState(null);
 
     const [data, setData] = useState({
         email: "",
@@ -38,8 +37,21 @@ export default function BookNow() {
         localStorage.setItem("user", JSON.stringify(userData));
     };
 
+    function validateEmail(email) { 
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    } 
+
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        if(!validateEmail(data.email)){
+            setError("Please enter a valid email address");
+            setTimeout(() => {
+                setError(null);
+            }, 2000);
+            return;
+        }
 
         try{
             setLoading1(true);
@@ -81,51 +93,6 @@ export default function BookNow() {
             }, 2000);
         }
     }
-        // try {
-        //     setLoading1(true);
-
-        //     fetch("http://localhost:5000/api/users/login", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-type": "application/json",
-        //         },
-        //         body: JSON.stringify(data),
-        //     })
-        //         .then((res) => {
-        //             return res.json();
-        //         })
-        //         .then((resData) => {
-        //             // Print the Stringified JSON object
-        //             let stringifyData = JSON.stringify(resData);
-        //             localStorage.setItem("user", stringifyData);
-
-        //             setLoading1(false);
-        //             setLoading2(true);
-        //             setTimeout(() => {
-        //                 setLoading2(false);
-        //                 navigate("/dashboard");
-        //             }, 2000);
-        //             // console.log(resData, "resData");
-        //             localStorage.setItem(
-        //                 "myInfo",
-        //                 JSON.stringify(resData.data)
-        //             );
-        //         })
-        //         .catch((err) => {
-        //             setLoading1(false);
-        //             setError(err.message);
-        //             console.log("err", err);
-        //         });
-        // } catch (err) {
-        //     setLoading1(false);
-        //     setError(err.message);
-        //     <Error error={error} />;
-        // }
-    // };
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    // };
 
     return (
         <div>

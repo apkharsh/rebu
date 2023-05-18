@@ -28,10 +28,22 @@ export default function BookNow() {
         setinput({ ...input, [name]: value });
     };
 
+    function validateEmail(email) { 
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    } 
+
     const registerUser = async (e) => {
         e.preventDefault();
         try {
-            if (input.password === "" || input.email === "") {
+            if(input.email) {
+                if(!validateEmail(input.email)) {
+                    setError("Please enter a valid email");
+                    setTimeout(() => {
+                        setError(null);
+                    }, 2000);
+                }
+            } else if (input.password === "" || input.email === "") {
                 setError("Please enter all the fields");
                 setTimeout(() => {
                     setError(null);
@@ -58,7 +70,7 @@ export default function BookNow() {
                         setLoading2(false);
                     }, 2000);
                 }
-                else{
+                else {
                     setLoading1(false);
                     setError(parsedData.response);
                     setTimeout(() => {
@@ -74,36 +86,6 @@ export default function BookNow() {
             }, 2000);
         }
     };
-
-    // function Addusertodb(e) {
-    //     e.preventDefault();
-    //     if (input.password !== "" || input.email !== "") {
-    //         setLoading1(true);
-    //         fetch("http://localhost:5000/api/users/register", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-type": "application/json",
-    //             },
-    //             body: JSON.stringify(input),
-    //         })
-    //             .then(() => {
-    //                 // setLoading2(true);
-    //                 console.log("success");
-    //                 setLoading1(false);
-    //                 setLoading2(true);
-    //                 setTimeout(() => {
-    //                     navigate("/login");
-    //                     setLoading2(false);
-    //                 }, 2000);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err, "err");
-    //                 setError(err);
-    //                 setLoading1(false);
-    //             });
-
-    //     }
-    // }
 
     return (
         <form onSubmit={registerUser} className="relative">
@@ -173,6 +155,7 @@ export default function BookNow() {
                                         type="email"
                                         name="email"
                                         onChange={handleChange}
+                                        pattern=".+@foo.com" 
                                         placeholder="abc@email.com"
                                         required
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
@@ -219,11 +202,11 @@ export default function BookNow() {
                                         />
                                     </div>
                                 </div>
-                                    <p>
-                                        <Link to={"/login"}>
-                                            Aleady have an account ?
-                                        </Link>
-                                    </p>
+                                <p>
+                                    <Link to={"/login"}>
+                                        Aleady have an account ?
+                                    </Link>
+                                </p>
                             </div>
                         </div>
                     </div>

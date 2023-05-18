@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CancelIcon2, EditIcon } from "../../Components/Icons";
 import { Link } from "react-router-dom";
 import Loader from "../../Assets/Lotties/Loader.json";
 import Lottie from "lottie-react";
 import { BASE_URL } from "../../Config/url";
+import { useNavigate } from "react-router";
 
 export default function Cancellation() {
+    const navigate = useNavigate();
     // converting time from unix to date and time so that it can be used in input type="datetime-local"
     function convertTime(unixTime) {
         // console.log(unixTime)
@@ -38,40 +40,50 @@ export default function Cancellation() {
     // this function is fetching data from the backend for all the bookings
     const fetchData = async () => {
         setLoading(true);
-        let user = await JSON.parse(localStorage.getItem("user"));
 
-        const response = await fetch(`${BASE_URL}/bookings/all`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                user: user.user.email,
-            }),
-        });
+        let user = await JSON.parse(localStorage.getItem("user")); // ID of loggedin user
 
-        var dataLocal = await response.json();
-        // change bookingFrom and bookingTo from unix to date and time
-        // console.log(dataLocal.filtered_bookings)
-        dataLocal.filtered_bookings.forEach((item) => {
-            const currentTime = new Date().getTime();
-            const bookingFrom = new Date(item.bookingFrom).getTime();
-            const bookingTo = new Date(item.bookingTo).getTime();
-
-            if (currentTime >= bookingFrom && currentTime <= bookingTo)
-                item.status = "checked in";
-            else if (currentTime > bookingTo) item.status = "checked out";
-            else item.status = "not checked in";
-            
-            item.bookingFrom = convertTime(item.bookingFrom);
-            item.bookingTo = convertTime(item.bookingTo);
-        });
-
-        setData(dataLocal.filtered_bookings);
-        setLoading(false);
+        try{
+            const response = await fetch(`${BASE_URL}/bookings/all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userID: user.user._id,
+                }),
+            });
+    
+            var dataLocal = await response.json();
+            // change bookingFrom and bookingTo from unix to date and time
+            // console.log(dataLocal.filtered_bookings)
+            dataLocal.filtered_bookings.forEach((item) => {
+                const currentTime = new Date().getTime();
+                const bookingFrom = new Date(item.bookingFrom).getTime();
+                const bookingTo = new Date(item.bookingTo).getTime();
+    
+                if (currentTime >= bookingFrom && currentTime <= bookingTo)
+                    item.status = "checked in";
+                else if (currentTime > bookingTo) item.status = "checked out";
+                else item.status = "not checked in";
+                
+                item.bookingFrom = convertTime(item.bookingFrom);
+                item.bookingTo = convertTime(item.bookingTo);
+            });
+    
+            setData(dataLocal.filtered_bookings);
+            setLoading(false);
+        }
+        catch(err){
+            setLoading(false);
+            // console.log(err);
+        }
     };
 
     React.useEffect(() => {
+        if(localStorage.getItem("user") === null){
+            navigate("/login");
+        }
         fetchData();
     }, []);
 
@@ -105,6 +117,7 @@ export default function Cancellation() {
             name: "Actions",
         },
     ];
+
 
     return (
         <motion.div className="w-full border h-[max-content] shadow rounded-xl scrollbar-hide overflow-x-auto ">

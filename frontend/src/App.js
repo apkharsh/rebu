@@ -10,12 +10,18 @@ import BookIcon, {
 import BookingTemp from "./Components/BookingTemp";
 import Rooms from "./Pages/Rooms/Rooms";
 import CancelRoutes from "./Routes/CancelRoutes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
 import Panel from "./Components/Panel";
+import { useNavigate } from "react-router-dom";
+
 
 function App() {
+
+    const user = localStorage.getItem("user");
+
+    const navigate = useNavigate();
     const route = useLocation().pathname;
     const [newIndex, setIndex] = useState(0);
     const links = [
@@ -51,20 +57,26 @@ function App() {
         },
     ];
 
-    if (route !== "/" && route !== "/signup" && route !== "/login") {
-        var user = JSON.parse(localStorage.getItem("user"));
-        var cars = {
-            id: 3,
-            name: "Cars",
-            route: "/rooms",
-            icon: <RoomsIcon className="w-6 h-6" />,
-        };
-
-        if (user.user.role === "admin") {
+    // if (route !== "/" && route !== "/signup" && route !== "/login") {
+    if (user) {
+        // means already logged in
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (userData.user.role === "admin") {
+            var cars = {
+                id: 3,
+                name: "Cars",
+                route: "/rooms",
+                icon: <RoomsIcon className="w-6 h-6" />,
+            };
             links.splice(2, 0, cars);
         }
-        console.log(links)
     }
+
+    useEffect(() => {
+        if(!user){
+            navigate("/");
+        }
+    }, []);
 
     return (
         <div className="text-black">

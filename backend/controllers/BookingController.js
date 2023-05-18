@@ -7,7 +7,7 @@ const { get_available_cars, send_email, checkCarAvailability } = require("./Help
 // COMPLETE
 const bookCar = async (req, res) => {
     const { userID, username, email, carType, startTime, endTime, carNumber } = req.body;
-    
+    // console.log("userID", userID)
     if (!username || !email || !startTime || !endTime) {
         return res.status(400).json({
             error: "Please enter all the fields",
@@ -130,6 +130,89 @@ const bookCar = async (req, res) => {
                 });
             }
         }
+    }
+};
+
+// /api/bookings/all?carType=A&carNumber=101&startTime=t1&endTime=t2&id='xyz'
+// COMPLETE
+const getBookings = async (req, res) => {
+    
+    console.log("Finding Bookings...");
+    // console.log(req.body)
+
+    try {
+        const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
+        const { userID } = await req.body;
+        console.log(userID)
+
+        if (bookingId) {
+            // Find a single booking with a bookingId
+            const booking = await Booking.findById(bookingId);
+
+            // Populate the car
+            const populated_booking = await Booking.findById(
+                booking._id
+            ).populate("carID");
+
+            return res.status(200).json({
+                booking: populated_booking,
+            });
+        } 
+        else {
+
+            let filters = {};
+            // search by userID
+            if (userID) {
+                // filters.carID = {};
+                filters.userID = userID;
+            }
+
+            if (startTime && endTime) {
+                filters.bookingFrom = { $gte: startTime };
+                filters.bookingTo = { $lte: endTime };
+            }
+            console.log("filters : ")
+            console.log(filters)
+
+            const bookings = await Booking.find(filters);
+
+            let filtered_bookings = [];
+
+            // Populate the cars
+            for (let i = 0; i < bookings.length; i++) {
+                
+                const populated_booking = await Booking.findById(
+                    bookings[i]._id
+                ).populate("carID");
+
+                // check if carType is given
+                if (carType != null) {
+                    // check if carType matches
+                    if (populated_booking.carID.carType == carType) {
+                        filtered_bookings.push(populated_booking);
+                    }
+                }
+                // check if carNumber is given
+                if (carNumber != null) {
+                    // check if carNumber matches
+                    if (populated_booking.carID.carNumber == carNumber) {
+                        filtered_bookings.push(populated_booking);
+                    }
+                }
+
+                if(carType == null && carNumber == null)
+                    filtered_bookings.push(populated_booking);
+            }
+            console.log("Bookings found" + filtered_bookings);
+            return res.status(200).json({
+                filtered_bookings,
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: "Internal server error",
+        });
     }
 };
 
@@ -261,6 +344,7 @@ const deleteBooking = async (req, res) => {
     }
 };
 
+
 // /api/bookings/getRefundAmount/:id
 // COMPLETE
 const getRefundAmount = async (req, res) => {
@@ -291,85 +375,6 @@ const getRefundAmount = async (req, res) => {
                 error: error.message,
             });
         }
-    }
-};
-
-// /api/bookings/all?carType=A&carNumber=101&startTime=t1&endTime=t2&id='xyz'
-// COMPLETE
-const getBookings = async (req, res) => {
-    
-    console.log("Finding Bookings...");
-    // console.log(req.body)
-
-    try {
-        const { bookingId, carType, carNumber, startTime, endTime } = await req.query;
-        const { user } = req.body;
-        console.log(user)
-        if (bookingId) {
-            // Find a single booking with a bookingId
-            const booking = await Booking.findById(bookingId);
-
-            // Populate the car
-            const populated_booking = await Booking.findById(
-                booking._id
-            ).populate("carID");
-
-            return res.status(200).json({
-                booking: populated_booking,
-            });
-        } 
-        else {
-
-            let filters = {};
-            // search by email
-            if (user) {
-                filters.email = user;
-            }
-
-            if (startTime && endTime) {
-                filters.bookingFrom = { $gte: startTime };
-                filters.bookingTo = { $lte: endTime };
-            }
-
-            const bookings = await Booking.find(filters);
-
-            let filtered_bookings = [];
-
-            // Populate the cars
-            for (let i = 0; i < bookings.length; i++) {
-                
-                const populated_booking = await Booking.findById(
-                    bookings[i]._id
-                ).populate("carID");
-
-                // check if carType is given
-                if (carType != null) {
-                    // check if carType matches
-                    if (populated_booking.carID.carType == carType) {
-                        filtered_bookings.push(populated_booking);
-                    }
-                }
-                // check if carNumber is given
-                if (carNumber != null) {
-                    // check if carNumber matches
-                    if (populated_booking.carID.carNumber == carNumber) {
-                        filtered_bookings.push(populated_booking);
-                    }
-                }
-
-                if(carType == null && carNumber == null)
-                    filtered_bookings.push(populated_booking);
-            }
-            console.log("Bookings found" + filtered_bookings)
-            return res.status(200).json({
-                filtered_bookings,
-            });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-            error: "Internal server error",
-        });
     }
 };
 

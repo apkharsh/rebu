@@ -2,19 +2,28 @@ import React, { useEffect, useState } from "react";
 import Loader from "../../../Assets/Lotties/Loader.json";
 import Lottie from "lottie-react";
 import { BASE_URL } from "../../../Config/url";
+import { useNavigate } from "react-router";
 
 export default function Table({ selected }) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [filteredData, setFilteredData] = useState([]);
-    // logged in user
-    // console.log(user, "user");
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        if(localStorage.getItem("user") === null){
+            navigate("/");
+        }
+    }, []);
+
+    // list all bookings
     const fetchData = async () => {
         setLoading(true);
-        let user = await JSON.parse(localStorage.getItem("user"));
-        // console.log(user.user.email);
+        console.log("fetchData is called")
+        
+        let user = await JSON.parse(localStorage.getItem("user")); // ID of loggedin user
+        
         try {
             const response = await fetch(`${BASE_URL}/bookings/all`, {
                 method: "POST",
@@ -22,7 +31,7 @@ export default function Table({ selected }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    user: user.user.email,
+                    userID: user.user._id,
                 }),
             });
             // const response = await fetch(`${BASE_URL}/bookings/all`,{

@@ -9,7 +9,21 @@ import { BASE_URL } from "../../Config/url";
 import Error from "../../Components/Error";
 
 export default function BookNow() {
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(localStorage.getItem("user") === null){
+            navigate("/");
+        }
+    }, []);
+
+
+    // const user = localStorage.getItem("user");
+    // if(!user){
+    //     navigate("/login");
+    // }
+
     const [data, setData] = useState({
         username: "",
         email: "",
@@ -22,6 +36,7 @@ export default function BookNow() {
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState(null);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,7 +58,12 @@ export default function BookNow() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading1(true);
+
         const { username, email, carType, startTime, endTime } = data;
+        // we are sending userID from local storage so bookings can be compared with their stored user id with these bookings
+        const userID = await JSON.parse(localStorage.getItem("user")).user._id;
+        // console.log(userID, "userID from booknow.js") // working hai
+        // console.log(userID, "userID from booknow.js")
         const unixStartTime = convertToUnix(startTime);
         const unixEndTime = convertToUnix(endTime);
 
@@ -55,6 +75,7 @@ export default function BookNow() {
                     xFormUrlEncoded: "true",
                 },
                 body: JSON.stringify({
+                    userID,
                     username,
                     email,
                     carType,
@@ -82,12 +103,18 @@ export default function BookNow() {
             <Error error={error} />;
         }
     };
+    // useEffect(() => {
+    //     if (!user) {
+    //         navigate("/login");
+    //     }
+    // });
 
     useEffect(() => {
         setTimeout(() => {
             setError(null);
         }, 3000);
     }, [error]);
+
 
     return (
         <form onSubmit={handleSubmit} className="relative">

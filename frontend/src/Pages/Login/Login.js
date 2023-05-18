@@ -81,52 +81,16 @@ export default function BookNow() {
             }, 2000);
         }
     }
-        // try {
-        //     setLoading1(true);
 
-        //     fetch("http://localhost:5000/api/users/login", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-type": "application/json",
-        //         },
-        //         body: JSON.stringify(data),
-        //     })
-        //         .then((res) => {
-        //             return res.json();
-        //         })
-        //         .then((resData) => {
-        //             // Print the Stringified JSON object
-        //             let stringifyData = JSON.stringify(resData);
-        //             localStorage.setItem("user", stringifyData);
+    function validateEmail(event) {
+        const enteredEmail = event.target.value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        //             setLoading1(false);
-        //             setLoading2(true);
-        //             setTimeout(() => {
-        //                 setLoading2(false);
-        //                 navigate("/dashboard");
-        //             }, 2000);
-        //             // console.log(resData, "resData");
-        //             localStorage.setItem(
-        //                 "myInfo",
-        //                 JSON.stringify(resData.data)
-        //             );
-        //         })
-        //         .catch((err) => {
-        //             setLoading1(false);
-        //             setError(err.message);
-        //             console.log("err", err);
-        //         });
-        // } catch (err) {
-        //     setLoading1(false);
-        //     setError(err.message);
-        //     <Error error={error} />;
-        // }
-    // };
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    // };
-
+        if (!emailPattern.test(enteredEmail)) {
+            alert("Please enter a valid email address.");
+        }
+    }
+        
     return (
         <div>
             <h1
@@ -185,6 +149,7 @@ export default function BookNow() {
                                             type="email"
                                             name="email"
                                             onChange={handleChange}
+                                            onBlur={validateEmail}
                                             placeholder="abc@email.com"
                                             required
                                             className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"

@@ -57,8 +57,7 @@ export default function BookNow() {
                         navigate("/login");
                         setLoading2(false);
                     }, 2000);
-                }
-                else{
+                } else {
                     setLoading1(false);
                     setError(parsedData.response);
                     setTimeout(() => {
@@ -74,6 +73,14 @@ export default function BookNow() {
             }, 2000);
         }
     };
+    function validateEmail(event) {
+        const enteredEmail = event.target.value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(enteredEmail)) {
+            alert("Please enter a valid email address.");
+        }
+    }
 
     // function Addusertodb(e) {
     //     e.preventDefault();
@@ -175,6 +182,9 @@ export default function BookNow() {
                                         onChange={handleChange}
                                         placeholder="abc@email.com"
                                         required
+                                        // pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                        // title="Please enter a valid email address"
+                                        onBlur={validateEmail}
                                         className="outline-none w-full px-2 py-3 border rounded-md shadow focus:shadow-lg transition-all"
                                     />
                                 </div>
@@ -219,11 +229,11 @@ export default function BookNow() {
                                         />
                                     </div>
                                 </div>
-                                    <p>
-                                        <Link to={"/login"}>
-                                            Aleady have an account ?
-                                        </Link>
-                                    </p>
+                                <p>
+                                    <Link to={"/login"}>
+                                        Aleady have an account ?
+                                    </Link>
+                                </p>
                             </div>
                         </div>
                     </div>
